@@ -1,0 +1,754 @@
+---
+a: "I want to buy a game!"
+q: "What type of game are you looking for?"
+i: BUY-GAME
+o:
+- a: "I'm looking for a Filler or Party Game"
+  q: "Are you playing with Geeks?"
+  i: PARTY
+  o:
+  - a: "Yes"
+    q: "Rolling dice, or bluffing game?"
+    i: GEEKS
+    o:
+    - a: "Dice"
+      q: "Are you a zombie or a giant monster?"
+      i: DICE
+      o:
+      - a: "Braaaaaaains...."
+        i: PLAYER-ZOMBIE
+        s: "Zombie Dice"
+      - a: "I'm Godzilla!"
+        i: PLAYER-GIANT-MONSTER
+        s: "King of Tokyo"
+    - a: "Bluffing"
+      q: "Cooperative or Competitive?"
+      i: BLUFF
+      o:
+      - a: "Trust no one"
+        i: COMPETITIVE
+        s: "Coup"
+      - a: "Let's play in teams"
+        i: COOPERATIVE
+        s: "The Resistance"
+  - a: "No"
+    q: "Do you like trivia?"
+    i: NO-GEEKS
+    o:
+    - a: "Yes"
+      i: TRIVIA
+      s: "Wits & Wagers"
+    - a: "No"
+      q: "How about something creative?"
+      i: NO-TRIVIA
+      o:
+      - a: "Sure"
+        q: "Working with words or pictures?"
+        i: CREATIVE
+        o:
+        - a: "Words"
+          i: WORDS
+          s: "Apples to Apples"
+        - a: "Pictures"
+          i: PICTURES
+          s: "Dixit"
+      - a: "Nope"
+        q: "How about a deduction game?"
+        i: NO-CREATIVE
+        o:
+        - a: null
+          i: DEDUCTION
+          s: "Hanabi"
+- a: "A Strategy Game"
+  q: "Does theme matter to you?"
+  i: STRATEGY
+  o:
+  - a: "Yes"
+    q: "What's your favorite theme?"
+    i: THEME
+    o:
+    - a: "City Building"
+      q: "Do you enjoy tile placement?"
+      i: CITY-BUILDING
+      o:
+      - a: "Yes"
+        q: "Are you willing to deal with elections?"
+        i: TILE-PLACEMENT
+        o:
+        - a: "It's the democratic way"
+          i: ELECTIONS
+          s: "Urban Sprawl"
+        - a: "Nope, I just want to build"
+          i: NO-ELECTIONS
+          s: "Suburbia"
+      - a: "No"
+        q: "Starting from scratch or urban renewal?"
+        i: NO-TILE-PLACEMENT
+        o:
+        - a: "Let's build it up!"
+          i: BUILDING-FROM-SCRATCH
+          s: "Urbanization"
+        - a: "Let's clean the streets!"
+          i: URBAN-RENEWAL
+          s: "Urbania"
+    - a: "Fantasy"
+      q: "Do you want dungeon crawling adventure?"
+      i: FANTASY
+      o:
+      - a: "Yes"
+        q: "A serious one?"
+        i: DUNGEON-CRAWL
+        o:
+        - a: "No"
+          i: 
+          s: "Munchkin"
+        - a: "Yes"
+          q: "How many players"
+          i: SERIOUS
+          o:
+          - a: "Just the two of us"
+            q: "Crush or out-maneuver your enemies?"
+            i: TWO-PLAYERS
+            o:
+            - a: "Fight"
+              i: FIGHT-ENEMIES
+              s: "Claustrophobia"
+            - a: "Maneuver"
+              i: OUT-MANEUVER-ENEMIES
+              s: "Dungeon Twister 2: Prison"
+          - a: "More than two"
+            q: "Cooperative or Competitive?"
+            i: MANY-PLAYERS
+            o:
+            - a: "Cooperative"
+              q: "Playing with kids?"
+              i: COOPERATIVE
+              o:
+              - a: "Yes"
+                i: KIDS
+                s: "Mice & Mystics"
+              - a: "No"
+                i: NO-KIDS
+                s: "Dungeons and Dragons: Legend of Drizzt"
+            - a: "Competitive"
+              q: "Do you want a campaign?"
+              i: COMPETITIVE
+              o:
+              - a: "Yes"
+                i: CAMPAIGN
+                s: "Descent: Journeys in the Dark 2nd Edition"
+              - a: "Just one game"
+                i: NO-CAMPAIGN
+                s: "Dungeon Run"
+      - a: "No"
+        q: "How about managing your own dungeon?"
+        i: NO-DUNGEON-CRAWL
+        o:
+        - a: "No"
+          q: "Want the whole questing thing, eh?"
+          i: NO-MANAGING-DUNGEON
+          o:
+          - a: "No"
+            q: "Do you like Deckbuilders?"
+            i: NO-QUESTING
+            o:
+            - a: "Yes"
+              q: "Competitive Deck Builders?"
+              i: DECKBUILDER
+              o:
+              - a: "Competitive"
+                i: COMPETITIVE
+                s: "Thunderstone: Advance"
+              - a: "Cooperative"
+                i: COOPERATIVE
+                s: "Rune Age"
+            - a: "No"
+              q: "Lord of the Rings fan?"
+              i: NO-DECKBUILDER
+              o:
+              - a: "Yes"
+                i: LOTR
+                s: "War of the Ring"
+              - a: "No"
+                q: "How about castle defense?"
+                i: NO-LOTR
+                o:
+                - a: "Sounds fun!"
+                  q: "Cooperative or Competitive?"
+                  i: CASTLE-DEFENSE
+                  o:
+                  - a: "Competitive"
+                    i: COOPERATIVE
+                    s: "Dragon Rampage"
+                  - a: "Cooperative"
+                    i: COMPETITIVE
+                    s: "Castle Panic"
+                - a: "Not for me"
+                  q: "Conquest in a fantasy world?"
+                  i: NO-CASTLE-DEFENSE
+                  o:
+                  - a: "Yes"
+                    q: "Epic?"
+                    i: FANTASY-CONQUEST
+                    o:
+                    - a: "Yes! It's gotta be big"
+                      i: LONG
+                      s: "Runewars"
+                    - a: "No, keep it quick"
+                      i: SHORT
+                      s: "Small World"
+                  - a: "No"
+                    q: "Everyday life, eh?"
+                    i: NO-FANTASY-CONQUEST
+                    o:
+                    - a: "Running a business"
+                      i: BUSINESS
+                      s: "Dungeon Petz"
+                    - a: "Relaxing after work"
+                      i: RELAX
+                      s: "Red Dragon Inn"
+                    - a: "Annihilating your business rivals"
+                      i: FIGHT-BUSINESS-RIVALS
+                      s: "Mage Wars"
+          - a: "Yes"
+            q: "Competitive or Cooperative?"
+            i: QUESTING
+            o:
+            - a: "Competitive"
+              q: "Mind getting trounced by random events?"
+              i: COMPETITIVE
+              o:
+              - a: "Yes, Strategy matters"
+                i: NO-RANDOM
+                s: "Mage Knight"
+              - a: "No, it's the experience that counts"
+                q: "Is storytelling important?"
+                i: RANDOM
+                o:
+                - a: "Yes"
+                  i: STORY-TELLING
+                  s: "Tales of the Arabian Nights"
+                - a: "Not as much as combat!"
+                  i: NO-STORY-TELLING
+                  s: "Talisman"
+            - a: "Cooperative - if I can backstab"
+              i: BACKSTAB
+              s: "Shadows Over Camelot"
+            - a: "Cooperative"
+              q: "Board game or card game?"
+              i: COOPERATIVE
+              o:
+              - a: "Boards"
+                i: BOARD
+                s: "Defenders of the realm"
+              - a: "Cards"
+                i: CARDS
+                s: "Lord if the Rings Living Card Game"
+        - a: "Yes"
+          i: MANAGING-DUNGEON
+          s: "Dungeon Lords"
+    - a: "Horror"
+      q: "What's your favourite monster?"
+      i: HORROR
+      o:
+      - a: "Zombies"
+        q: "Boards or Cards?"
+        i: ZOMBIES
+        o:
+        - a: "Board Game"
+          q: "Survival of the Fittest or Zombies vs Humans"
+          i: BOARD
+          o:
+          - a: "Survival of the Fittest"
+            i: FITTEST-SURVIVAL
+            s: "City of Horror"
+          - a: "Zombies vs. Humans"
+            q: "Does anyone want to play as the zombies?"
+            i: ZOMBIES-VS-HUMANS
+            o:
+            - a: "We're all humans here"
+              i: ALL-HUMANS
+              s: "Zombicide"
+            - a: "Sure! Braaaains..."
+              i: PLAYER-ZOMBIE
+              s: "Last Night on Earth"
+        - a: "Card Game"
+          i: CARDS
+          s: "Resident Evil Deckbuilding Game"
+      - a: "Cthulhu"
+        q: "Ever wanted to play on his side?"
+        i: CTHULHU
+        o:
+        - a: "Well, maybe a little..."
+          i: SIDE-WITH-ELDER-GOD
+          s: "Mansions of Madness"
+        - a: "Side with Elder Gods? No! Humanity stands together"
+          q: "An epic investigation or a gateway game?"
+          i: NO-SIDE-WITH-ELDER-GOD
+          o:
+          - a: "I want an epic!"
+            i: EPIC-INVESTIGATION
+            s: "Arkham Horror"
+          - a: "Gateway, please"
+            i: GATEWAY-GAME
+            s: "Elder Sign"
+      - a: "Classic Movie Monsters"
+        q: "Card-based combat or a mystery?"
+        i: CLASSIC-MOVIE-MONSTERS
+        o:
+        - a: "I'll crush you!"
+          i: COMBAT
+          s: "Nightfall"
+        - a: "I'd rather be a detective"
+          i: MYSTERY
+          s: "Betrayal at House on the Hill"
+    - a: "Science Fiction"
+      q: "Star Wars fan?"
+      i: SCIENCE-FICTION
+      o:
+      - a: "No"
+        q: "Star Trek, then?"
+        i: NO-STAR-WARS
+        o:
+        - a: "Yes"
+          q: "One-on-one or working together?"
+          i: STAR-TREK
+          o:
+          - a: "Competitive"
+            i: COMPETITIVE
+            s: "Star Trek: Fleet Captains"
+          - a: "Cooperative"
+            i: COOPERATIVE
+            s: "Star Trek Expeditions"
+        - a: "No"
+          q: "Battlestar Galactica?"
+          i: NO-STAR-TREK
+          o:
+          - a: "Yes"
+            i: BATTLE-STAR-GALACTICA
+            s: "Battlestar Galactica: the Board Game"
+          - a: "No"
+            q: "Explore, Expand, Exploit, Exterminate?"
+            i: NO-BATTLE-STAR-GALACTICA
+            o:
+            - a: "Of course!"
+              q: "So, just how epic are we getting?"
+              i: EXPLORE-EXPAND-EXPLOIT-EXTERMINATE
+              o:
+              - a: "We've got all day"
+                i: LONG
+                s: "Twilight Imperium: 3rd Edition"
+              - a: "It is a work night..."
+                i: SHORT
+                s: "Eclipse"
+            - a: "That's not right!"
+              q: "How about being an alien race?"
+              i: NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE
+              o:
+              - a: "Maybe not"
+                q: "How about a card game?"
+                i: NO-PLAYER-ALIEN
+                o:
+                - a: "Sure, that works"
+                  q: "A Deck Builder?"
+                  i: CARDS
+                  o:
+                  - a: "Yes"
+                    i: DECK-BUILDER
+                    s: "Core Worlds"
+                  - a: "No"
+                    q: "A Living Card Game?"
+                    i: NO-DECK-BUILDER
+                    o:
+                    - a: "Yes"
+                      i: LIVING-CARD
+                      s: "Android: Netrunner"
+                    - a: "No"
+                      i: NO-LIVING-CARD
+                      s: "Race for the Galaxy"
+                - a: "I like my boards"
+                  q: "If not an alien, I'll be a..."
+                  i: BOARD
+                  o:
+                  - a: "Athlete"
+                    i: ATHLETE
+                    s: "Dreadball: The Futuristic Sport Game"
+                  - a: "Galactic Corporation"
+                    i: GALACTIC-CORPORATION
+                    s: "Phantom League"
+                  - a: "Space Crew on a Mission"
+                    q: "How will you succeed?"
+                    i: SPACE-CREW-ON-MISSION
+                    o:
+                    - a: "Teamwork and high-speed planning"
+                      i: FAST-PLANNING
+                      s: "Space Alert"
+                    - a: "Teamwork and dexterity"
+                      i: DEXTERITY
+                      s: "Space Cadets"
+                  - a: "Merchant"
+                    q: "Seriously?"
+                    i: MERCHANT
+                    o:
+                    - a: "It's serious business"
+                      i: SERIOUS
+                      s: "Merchant of Venus"
+                    - a: "Nah, we just want a giggle"
+                      i: NO-SERIOUS
+                      s: "Galaxy Trucker"
+              - a: "That sounds fun"
+                q: "Doing battle..."
+                i: PLAYER-ALIEN
+                o:
+                - a: "In Space"
+                  i: FIGHT-IN-SPACE
+                  s: "Cosmic Encounter"
+                - a: "For the Galactic Centre"
+                  i: FIGHT-FOR-GALACTIC-CENTRE
+                  s: "Rex: Final Days of an Empire"
+                - a: "For Earth!"
+                  i: FIGHT-FOR-EARTH
+                  s: "Conquest of Planet Earth"
+      - a: "Yes"
+        q: "Grand adventure or tactical space combat?"
+        i: STAR-WARS
+        o:
+        - a: "Adventure"
+          i: ADVENTURE
+          s: "Star Wars Living Card Game"
+        - a: "Pew! Pew!"
+          i: COMBAT
+          s: "Star Wars: X-WingStar Wars Living Miniature Game"
+  - a: "No"
+    q: "What's most important to you?"
+    i: NO-THEME
+    o:
+    - a: Give me good mechanics over theme"
+      q: "Do you want a route- or network building game?"
+      i: MECHANICS
+      o:
+        - a: "Not really"
+          q: "Civilization building, then?"
+          i: NO-ROUTE-OR-NETWORK-BUILDING
+          o:
+          - a: "Yes"
+            q: "Do you want to play with technology trees?"
+            i: CIVILIZATION-BUILDING
+            o:
+            - a: "Yes"
+              q: "How complex?"
+              i: TECHNOLOGY-TREES
+              o:
+              - a: "Pretty Complex"
+                q: " Want to see your world on a map?"
+                i: HARD
+                o:
+                - a: "Yes"
+                  i: MAP
+                  s: "Sid Meier's Civilization: The Board Game"
+                - a: "No"
+                  i: NO-MAP
+                  s: "Through the Ages: A Story of Civilization "
+              - a: "Let's keep it simpler"
+                i: SIMPLE
+                s: "Clash of Cultures"
+            - a: "No"
+              i: NO-TECHNOLOGY-TREES
+              s: "7 Wonders"
+          - a: "No"
+            q: "A cooperative game?"
+            i: NO-CIVILIZATION-BUILDING
+            o:
+            - a: "Everybody's on their own"
+              q: "More than 2 players?"
+              i: COMPETITIVE
+              o:
+              - a: "No"
+                q: "How long do you have?"
+                i: TWO-PLAYERS
+                o:
+                - a: "30 minutes or less"
+                  q: "Are you explorer or builder?"
+                  i: SHORT
+                  o:
+                  - a: "Explorer"
+                    i: EXPLORATION
+                    s: "Lost Cities"
+                  - a: "Builder"
+                    i: BUILDING
+                    s: "Agricola: All Creatures Big & Small"
+                - a: "At least an hour"
+                  q: "Want to rewrite history?"
+                  i: LONG
+                  o:
+                  - a: "Yes - especially the Cold War"
+                    i: REWRITE-HISTORY
+                    s: "Twilight Struggle"
+                  - a: "No I prefer mysteries"
+                    i: MYSTERY
+                    s: "Mr. Jack"
+              - a: "Yes"
+                q: "Does it have to be new?"
+                i: MANY-PLAYERS
+                o:
+                - a: "No, classics are classics for a reason"
+                  q: "Classic board or card games?"
+                  i: CLASSIC
+                  o:
+                  - a: "Shuffling is fun!"
+                    q: "Want to build your own deck?"
+                    i: CARDS
+                    o:
+                    - a: "Yes"
+                      i: DECKBUILDER
+                      s: "Dominion"
+                    - a: "I'd rather build a tableau"
+                      i: NO-DECKBUILDER
+                      s: "St. Petersburg"
+                  - a: "Boards are a must!"
+                    q: "Developing on a small or grand scale?"
+                    i: BOARD
+                    o:
+                    - a: "Build me a nation!"
+                      i: GRAND-SCALE
+                      s: "Puerto Rico"
+                    - a: "I just want my bit of land"
+                      i: SMALL-SCALE
+                      s: "Agricola"
+                - a: "Yes, we've gotten better at designing"
+                  q: "Maybe a new twist on worker placement?"
+                  i: NO-CLASSIC
+                  o:
+                  - a: "Yes"
+                    i: WORKER-PLACEMENT
+                    s: "Tzolk'in: The Mayan Calender"
+                  - a: "No"
+                    q: "Building an empire or working magic?"
+                    i: NO-WORKER-PLACEMENT
+                    o:
+                    - a: "Magic!"
+                      i: MAGIC
+                      s: "Seasons"
+                    - a: "Empire!"
+                      i: EMPIRE
+                      s: "Kingdom Builder"
+            - a: "Yes, completely"
+              q: "How hard do you want to make it?"
+              i: COOPERATIVE
+              o:
+              - a: "Easy"
+                i: SIMPLE
+                s: "Forbidden Island"
+              - a: "Medium"
+                i: MEDIUM-DIFFICULTY
+                s: "Flash Point: Fire Rescue"
+              - a: "Difficult"
+                i: HARD
+                s: "Pandemic"
+              - a: "Very Difficult"
+                i: VERY-HARD
+                s: "Ghost Stories"
+        - a: "Trains & infrastructure? Sure!"
+          q: "What level of complexity can your group handle?"
+          i: ROUTE-OR-NETWORK-BUILDING
+          o:
+          - a: "Low"
+            q: "Have you played Ticket to Ride?"
+            i: SIMPLE
+            o:
+            - a: "No yet"
+              i: NO-KNOW-TICK-TO-RIDE
+              s: "Ticket to Ride"
+            - a: "Yes. What else is out there?"
+              i: KNOW-TICK-TO-RIDE
+              s: "Chicago Express"
+          - a: "Medium"
+            q: "Want to be able to customize difficulty?"
+            i: MEDIUM-DIFFICULTY
+            o:
+            - a: "Yes"
+              i: CUSTOMIZE-DIFFICULTY
+              s: "Steam: Rails to Riches"
+            - a: "No"
+              i: NO-CUSTOMIZE-DIFFICULTY
+              s: "Thurn & Taxis"
+          - a: "Heavy"
+            q: "Trains or infrastructure?"
+            i: HARD
+            o:
+            - a: "Infrastructure"
+              i: INFRASTRUCTURE
+              s: "Power Grid"
+            - a: "Trains"
+              q: "Want to play the stock market too?"
+              i: TRAINS
+              o:
+              - a: "Yes"
+                i: STOCK-MARKET
+                s: "18XX Series"
+              - a: "No"
+                i: NO-STOCK-MARKET
+                s: "Crayon Rails Games"
+    - a: "I'm playing with Non-Gamers"
+      q: "Are they kids?"
+      i: NON-GAMERS
+      o:
+      - a: "Yes"
+        q: "Do they like animals?"
+        i: KIDS
+        o:
+        - a: "Yes"
+          q: "How's their attention span?"
+          i: ANIMALS
+          o:
+          - a: "Pretty long"
+            i: LONG
+            s: "Zooloretto"
+          - a: "Pretty short"
+            i: SHORT
+            s: "Hey! That's My Fish"
+        - a: "No"
+          q: "How about something more abstract?"
+          i: NO-ANIMALS
+          o:
+          - a: "Sure"
+            q: "Anybody scared of insects?"
+            i: ABSTRACT
+            o:
+            - a: "Maybe a little..."
+              i: NO-INSECTS
+              s: "Ingenious"
+            - a: "Nope!"
+              i: INSECTS
+              s: "Hive"
+          - a: "No thanks"
+            i: NO-ABSTRACT
+            s: "River dragons"
+      - a: "No"
+        q: "Do they hold grudges?"
+        i: NO-KIDS
+        o:
+        - a: "No"
+          i: NO-PLAYERS-HOLD-GRUDGES
+          s: "Survive: Escape from Atlantis"
+        - a: "Yes"
+          q: "Do they like trains"
+          i: PLAYERS-HOLD-GRUDGES
+          o:
+          - a: "No"
+            q: "How about rolling lots of dice?"
+            i: NO-TRAINS
+            o:
+            - a: "Luck, be a lady!"
+              q: "And negotiations?"
+              i: DICE
+              o:
+              - a: "I love negotiating and trading"
+                i: NEGOTIATE
+                s: "Settlers of Catan"
+              - a: "No, I'd rather do my own thing"
+                i: NO-NEGOTIATE
+                s: "Stone Age"
+            - a: "Pure strategy, please"
+              i: NO-DICE
+              s: "Carcassonne"
+          - a: "Yes"
+            i: TRAINS
+            s: "Ticket to Ride"
+- a: "I want a Wargame"
+  q: "For how many players?"
+  i: WARGAME
+  o:
+  - a: "2 or more"
+    q: "Do you have any wargaming experience?"
+    i: MANY-PLAYERS
+    o:
+    - a: "It's new to me"
+      q: "Are you a fan of Risk?"
+      i: NEW-WARGAMER
+      o:
+      - a: "Yes"
+        i: RISK
+        s: "Risk: Legacy"
+      - a: "No"
+        q: "World history, or high fantasy?"
+        i: NO-RISK
+        o:
+        - a: "History"
+          i: HISTORY
+          s: "Memoir '44"
+        - a: "Fantasy"
+          i: FANTASY
+          s: "Battles of Westeros"
+    - a: "Yes"
+      q: "Want to command Roman legions?"
+      i: NO-NEW-WARGAMER
+      o:
+      - a: "Yes"
+        i: ROMAN-LEGIONS
+        s: "Commands & Colors: Ancients"
+      - a: "No"
+        q: "Lead 19th Century battle lines?"
+        i: NO-ROMAN-LEGIONS
+        o:
+        - a: "No"
+          q: "How about World War II ?"
+          i: NO-XIX-CENTURY-BATTLE
+          o:
+          - a: "Yes"
+            q: "Card- or dice- driven combat?"
+            i: WW2
+            o:
+            - a: "*roll roll roll*"
+              i: DICE
+              s: "Tide of Iron"
+            - a: "*shuffle shuffle*"
+              i: CARDS
+              s: "Combat Commander Series"
+          - a: "No"
+            q: "Modern Warfare, then?"
+            i: NO-WW2
+            o:
+            - a: "Yes, I like the immediacy"
+              i: MODERN-WARFARE
+              s: "Labyrinth: The War on Terror"
+            - a: "No, I'm tired of real wars"
+              q: "Science Fiction or alternate history?"
+              i: NO-MODERN-WARFARE
+              o:
+              - a: "Alt-History"
+                q: "Tactical miniatures, or large-scale strategy?"
+                i: ALT-HISTORY
+                o:
+                  - a: "Strategic"
+                    i: STRATEGY
+                    s: "Fortress America"
+                  - a: "Tactical"
+                    i: TACTICS
+                    s: "Dust Tactics"
+              - a: "Science Fiction"
+                q: "Space ships or giant robots?"
+                i: SCIENCE-FICTION
+                o:
+                - a: "Ships!"
+                  i: SPACE-SHIPS
+                  s: "Battleship Galaxies"
+                - a: "Mechs!"
+                  i: ROBOTS
+                  s: "Battletech"
+        - a: "Yes"
+          i: XIX-CENTURY-BATTLE
+          s: "1812: The Invasion of Canada"
+  - a: "Just me"
+    q: null
+    i: ONE-PLAYER
+    o:
+    - a: "Historic Battles"
+      i: HISTORIC
+      s: "Field Commander Series "
+    - a: "Modern Air Support"
+      i: AIR-SUPPORT
+      s: "Thunderbolt: Apache Leader "
+    - a: "Science Fiction"
+      i: SCIENCE-FICTION
+      s: "Space Infantry"

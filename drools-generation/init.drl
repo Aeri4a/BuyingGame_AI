@@ -1,0 +1,26 @@
+package put.ai;
+
+import java.util.ArrayList;
+
+declare Answer
+	name : String
+	answer : String
+end
+
+declare Question
+	name : String
+	question : String
+    many : boolean
+	answers : ArrayList
+end
+
+declare Solution
+	solution: String
+end
+
+rule "Init"
+when
+then
+		insert(new Answer("BUY-GAME", "I want to buy a game!"));
+end
+
