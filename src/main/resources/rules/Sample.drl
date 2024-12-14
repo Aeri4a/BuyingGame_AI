@@ -1,3 +1,3805 @@
 package put.ai;
 
-// TO DELETE OR RENAME
+import java.util.ArrayList;
+
+declare Answer
+	name : String
+	answer : String
+end
+
+declare Question
+	name : String
+	question : String
+    many : boolean
+	answers : ArrayList
+end
+
+declare Solution
+	solution: String
+end
+
+rule "Init"
+when
+then
+	insert(new Answer("BUY-GAME", "I want to buy a game!"));
+end
+
+rule "update-gui"
+when
+    q: Question( )
+    gui: LayoutUI( )
+then
+    gui.changeState(q);
+end
+
+
+
+rule "generate-question>BUY-GAME"
+when
+	Answer( name == "BUY-GAME" )
+then
+	Question question = new Question("BUY-GAME", "What type of game are you looking for?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("PARTY", "I'm looking for a Filler or Party Game"));
+	question.getAnswers().add(new Answer("STRATEGY", "A Strategy Game"));
+	question.getAnswers().add(new Answer("WARGAME", "I want a Wargame"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>PARTY"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "PARTY" )
+then
+	Question question = new Question("PARTY", "Are you playing with Geeks?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("GEEKS", "Yes"));
+	question.getAnswers().add(new Answer("NO-GEEKS", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>PARTY>GEEKS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "PARTY" )
+	Answer( name == "GEEKS" )
+then
+	Question question = new Question("GEEKS", "Rolling dice, or bluffing game?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("DICE", "Dice"));
+	question.getAnswers().add(new Answer("BLUFF", "Bluffing"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>PARTY>GEEKS>DICE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "PARTY" )
+	Answer( name == "GEEKS" )
+	Answer( name == "DICE" )
+then
+	Question question = new Question("DICE", "Are you a zombie or a giant monster?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("PLAYER-ZOMBIE", "Braaaaaaains...."));
+	question.getAnswers().add(new Answer("PLAYER-GIANT-MONSTER", "I'm Godzilla!"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>PARTY>GEEKS>DICE>PLAYER-ZOMBIE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "PARTY" )
+	Answer( name == "GEEKS" )
+	Answer( name == "DICE" )
+	Answer( name == "PLAYER-ZOMBIE" )
+then
+    Question question = new Question("SOLUTION", "Zombie Dice", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>PARTY>GEEKS>DICE>PLAYER-GIANT-MONSTER"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "PARTY" )
+	Answer( name == "GEEKS" )
+	Answer( name == "DICE" )
+	Answer( name == "PLAYER-GIANT-MONSTER" )
+then
+    Question question = new Question("SOLUTION", "King of Tokyo", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>PARTY>GEEKS>BLUFF"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "PARTY" )
+	Answer( name == "GEEKS" )
+	Answer( name == "BLUFF" )
+then
+	Question question = new Question("BLUFF", "Cooperative or Competitive?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("COMPETITIVE", "Trust no one"));
+	question.getAnswers().add(new Answer("COOPERATIVE", "Let's play in teams"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>PARTY>GEEKS>BLUFF>COMPETITIVE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "PARTY" )
+	Answer( name == "GEEKS" )
+	Answer( name == "BLUFF" )
+	Answer( name == "COMPETITIVE" )
+then
+    Question question = new Question("SOLUTION", "Coup", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>PARTY>GEEKS>BLUFF>COOPERATIVE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "PARTY" )
+	Answer( name == "GEEKS" )
+	Answer( name == "BLUFF" )
+	Answer( name == "COOPERATIVE" )
+then
+    Question question = new Question("SOLUTION", "The Resistance", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>PARTY>NO-GEEKS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "PARTY" )
+	Answer( name == "NO-GEEKS" )
+then
+	Question question = new Question("NO-GEEKS", "Do you like trivia?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("TRIVIA", "Yes"));
+	question.getAnswers().add(new Answer("NO-TRIVIA", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>PARTY>NO-GEEKS>TRIVIA"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "PARTY" )
+	Answer( name == "NO-GEEKS" )
+	Answer( name == "TRIVIA" )
+then
+    Question question = new Question("SOLUTION", "Wits & Wagers", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>PARTY>NO-GEEKS>NO-TRIVIA"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "PARTY" )
+	Answer( name == "NO-GEEKS" )
+	Answer( name == "NO-TRIVIA" )
+then
+	Question question = new Question("NO-TRIVIA", "How about something creative?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("CREATIVE", "Sure"));
+	question.getAnswers().add(new Answer("NO-CREATIVE", "Nope"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>PARTY>NO-GEEKS>NO-TRIVIA>CREATIVE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "PARTY" )
+	Answer( name == "NO-GEEKS" )
+	Answer( name == "NO-TRIVIA" )
+	Answer( name == "CREATIVE" )
+then
+	Question question = new Question("CREATIVE", "Working with words or pictures?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("WORDS", "Words"));
+	question.getAnswers().add(new Answer("PICTURES", "Pictures"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>PARTY>NO-GEEKS>NO-TRIVIA>CREATIVE>WORDS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "PARTY" )
+	Answer( name == "NO-GEEKS" )
+	Answer( name == "NO-TRIVIA" )
+	Answer( name == "CREATIVE" )
+	Answer( name == "WORDS" )
+then
+    Question question = new Question("SOLUTION", "Apples to Apples", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>PARTY>NO-GEEKS>NO-TRIVIA>CREATIVE>PICTURES"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "PARTY" )
+	Answer( name == "NO-GEEKS" )
+	Answer( name == "NO-TRIVIA" )
+	Answer( name == "CREATIVE" )
+	Answer( name == "PICTURES" )
+then
+    Question question = new Question("SOLUTION", "Dixit", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>PARTY>NO-GEEKS>NO-TRIVIA>NO-CREATIVE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "PARTY" )
+	Answer( name == "NO-GEEKS" )
+	Answer( name == "NO-TRIVIA" )
+	Answer( name == "NO-CREATIVE" )
+then
+	Question question = new Question("NO-CREATIVE", "How about a deduction game?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("DEDUCTION", "None"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>PARTY>NO-GEEKS>NO-TRIVIA>NO-CREATIVE>DEDUCTION"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "PARTY" )
+	Answer( name == "NO-GEEKS" )
+	Answer( name == "NO-TRIVIA" )
+	Answer( name == "NO-CREATIVE" )
+	Answer( name == "DEDUCTION" )
+then
+    Question question = new Question("SOLUTION", "Hanabi", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+then
+	Question question = new Question("STRATEGY", "Does theme matter to you?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("THEME", "Yes"));
+	question.getAnswers().add(new Answer("NO-THEME", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+then
+	Question question = new Question("THEME", "What's your favorite theme?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("CITY-BUILDING", "City Building"));
+	question.getAnswers().add(new Answer("FANTASY", "Fantasy"));
+	question.getAnswers().add(new Answer("HORROR", "Horror"));
+	question.getAnswers().add(new Answer("SCIENCE-FICTION", "Science Fiction"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>CITY-BUILDING"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "CITY-BUILDING" )
+then
+	Question question = new Question("CITY-BUILDING", "Do you enjoy tile placement?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("TILE-PLACEMENT", "Yes"));
+	question.getAnswers().add(new Answer("NO-TILE-PLACEMENT", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>CITY-BUILDING>TILE-PLACEMENT"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "CITY-BUILDING" )
+	Answer( name == "TILE-PLACEMENT" )
+then
+	Question question = new Question("TILE-PLACEMENT", "Are you willing to deal with elections?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("ELECTIONS", "It's the democratic way"));
+	question.getAnswers().add(new Answer("NO-ELECTIONS", "Nope, I just want to build"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>CITY-BUILDING>TILE-PLACEMENT>ELECTIONS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "CITY-BUILDING" )
+	Answer( name == "TILE-PLACEMENT" )
+	Answer( name == "ELECTIONS" )
+then
+    Question question = new Question("SOLUTION", "Urban Sprawl", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>CITY-BUILDING>TILE-PLACEMENT>NO-ELECTIONS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "CITY-BUILDING" )
+	Answer( name == "TILE-PLACEMENT" )
+	Answer( name == "NO-ELECTIONS" )
+then
+    Question question = new Question("SOLUTION", "Suburbia", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>CITY-BUILDING>NO-TILE-PLACEMENT"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "CITY-BUILDING" )
+	Answer( name == "NO-TILE-PLACEMENT" )
+then
+	Question question = new Question("NO-TILE-PLACEMENT", "Starting from scratch or urban renewal?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("BUILDING-FROM-SCRATCH", "Let's build it up!"));
+	question.getAnswers().add(new Answer("URBAN-RENEWAL", "Let's clean the streets!"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>CITY-BUILDING>NO-TILE-PLACEMENT>BUILDING-FROM-SCRATCH"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "CITY-BUILDING" )
+	Answer( name == "NO-TILE-PLACEMENT" )
+	Answer( name == "BUILDING-FROM-SCRATCH" )
+then
+    Question question = new Question("SOLUTION", "Urbanization", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>CITY-BUILDING>NO-TILE-PLACEMENT>URBAN-RENEWAL"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "CITY-BUILDING" )
+	Answer( name == "NO-TILE-PLACEMENT" )
+	Answer( name == "URBAN-RENEWAL" )
+then
+    Question question = new Question("SOLUTION", "Urbania", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>FANTASY"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+then
+	Question question = new Question("FANTASY", "Do you want dungeon crawling adventure?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("DUNGEON-CRAWL", "Yes"));
+	question.getAnswers().add(new Answer("NO-DUNGEON-CRAWL", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>FANTASY>DUNGEON-CRAWL"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "DUNGEON-CRAWL" )
+then
+	Question question = new Question("DUNGEON-CRAWL", "A serious one?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("None", "No"));
+	question.getAnswers().add(new Answer("SERIOUS", "Yes"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>DUNGEON-CRAWL>None"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "DUNGEON-CRAWL" )
+	Answer( name == "None" )
+then
+    Question question = new Question("SOLUTION", "Munchkin", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>FANTASY>DUNGEON-CRAWL>SERIOUS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "DUNGEON-CRAWL" )
+	Answer( name == "SERIOUS" )
+then
+	Question question = new Question("SERIOUS", "How many players", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("TWO-PLAYERS", "Just the two of us"));
+	question.getAnswers().add(new Answer("MANY-PLAYERS", "More than two"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>FANTASY>DUNGEON-CRAWL>SERIOUS>TWO-PLAYERS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "DUNGEON-CRAWL" )
+	Answer( name == "SERIOUS" )
+	Answer( name == "TWO-PLAYERS" )
+then
+	Question question = new Question("TWO-PLAYERS", "Crush or out-maneuver your enemies?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("FIGHT-ENEMIES", "Fight"));
+	question.getAnswers().add(new Answer("OUT-MANEUVER-ENEMIES", "Maneuver"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>DUNGEON-CRAWL>SERIOUS>TWO-PLAYERS>FIGHT-ENEMIES"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "DUNGEON-CRAWL" )
+	Answer( name == "SERIOUS" )
+	Answer( name == "TWO-PLAYERS" )
+	Answer( name == "FIGHT-ENEMIES" )
+then
+    Question question = new Question("SOLUTION", "Claustrophobia", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>DUNGEON-CRAWL>SERIOUS>TWO-PLAYERS>OUT-MANEUVER-ENEMIES"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "DUNGEON-CRAWL" )
+	Answer( name == "SERIOUS" )
+	Answer( name == "TWO-PLAYERS" )
+	Answer( name == "OUT-MANEUVER-ENEMIES" )
+then
+    Question question = new Question("SOLUTION", "Dungeon Twister 2: Prison", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>FANTASY>DUNGEON-CRAWL>SERIOUS>MANY-PLAYERS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "DUNGEON-CRAWL" )
+	Answer( name == "SERIOUS" )
+	Answer( name == "MANY-PLAYERS" )
+then
+	Question question = new Question("MANY-PLAYERS", "Cooperative or Competitive?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("COOPERATIVE", "Cooperative"));
+	question.getAnswers().add(new Answer("COMPETITIVE", "Competitive"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>FANTASY>DUNGEON-CRAWL>SERIOUS>MANY-PLAYERS>COOPERATIVE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "DUNGEON-CRAWL" )
+	Answer( name == "SERIOUS" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "COOPERATIVE" )
+then
+	Question question = new Question("COOPERATIVE", "Playing with kids?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("KIDS", "Yes"));
+	question.getAnswers().add(new Answer("NO-KIDS", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>DUNGEON-CRAWL>SERIOUS>MANY-PLAYERS>COOPERATIVE>KIDS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "DUNGEON-CRAWL" )
+	Answer( name == "SERIOUS" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "COOPERATIVE" )
+	Answer( name == "KIDS" )
+then
+    Question question = new Question("SOLUTION", "Mice & Mystics", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>DUNGEON-CRAWL>SERIOUS>MANY-PLAYERS>COOPERATIVE>NO-KIDS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "DUNGEON-CRAWL" )
+	Answer( name == "SERIOUS" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "COOPERATIVE" )
+	Answer( name == "NO-KIDS" )
+then
+    Question question = new Question("SOLUTION", "Dungeons and Dragons: Legend of Drizzt", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>FANTASY>DUNGEON-CRAWL>SERIOUS>MANY-PLAYERS>COMPETITIVE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "DUNGEON-CRAWL" )
+	Answer( name == "SERIOUS" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "COMPETITIVE" )
+then
+	Question question = new Question("COMPETITIVE", "Do you want a campaign?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("CAMPAIGN", "Yes"));
+	question.getAnswers().add(new Answer("NO-CAMPAIGN", "Just one game"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>DUNGEON-CRAWL>SERIOUS>MANY-PLAYERS>COMPETITIVE>CAMPAIGN"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "DUNGEON-CRAWL" )
+	Answer( name == "SERIOUS" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "CAMPAIGN" )
+then
+    Question question = new Question("SOLUTION", "Descent: Journeys in the Dark 2nd Edition", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>DUNGEON-CRAWL>SERIOUS>MANY-PLAYERS>COMPETITIVE>NO-CAMPAIGN"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "DUNGEON-CRAWL" )
+	Answer( name == "SERIOUS" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "NO-CAMPAIGN" )
+then
+    Question question = new Question("SOLUTION", "Dungeon Run", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+then
+	Question question = new Question("NO-DUNGEON-CRAWL", "How about managing your own dungeon?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("NO-MANAGING-DUNGEON", "No"));
+	question.getAnswers().add(new Answer("MANAGING-DUNGEON", "Yes"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+then
+	Question question = new Question("NO-MANAGING-DUNGEON", "Want the whole questing thing, eh?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("NO-QUESTING", "No"));
+	question.getAnswers().add(new Answer("QUESTING", "Yes"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>NO-QUESTING"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "NO-QUESTING" )
+then
+	Question question = new Question("NO-QUESTING", "Do you like Deckbuilders?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("DECKBUILDER", "Yes"));
+	question.getAnswers().add(new Answer("NO-DECKBUILDER", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>NO-QUESTING>DECKBUILDER"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "NO-QUESTING" )
+	Answer( name == "DECKBUILDER" )
+then
+	Question question = new Question("DECKBUILDER", "Competitive Deck Builders?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("COMPETITIVE", "Competitive"));
+	question.getAnswers().add(new Answer("COOPERATIVE", "Cooperative"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>NO-QUESTING>DECKBUILDER>COMPETITIVE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "NO-QUESTING" )
+	Answer( name == "DECKBUILDER" )
+	Answer( name == "COMPETITIVE" )
+then
+    Question question = new Question("SOLUTION", "Thunderstone: Advance", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>NO-QUESTING>DECKBUILDER>COOPERATIVE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "NO-QUESTING" )
+	Answer( name == "DECKBUILDER" )
+	Answer( name == "COOPERATIVE" )
+then
+    Question question = new Question("SOLUTION", "Rune Age", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>NO-QUESTING>NO-DECKBUILDER"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "NO-QUESTING" )
+	Answer( name == "NO-DECKBUILDER" )
+then
+	Question question = new Question("NO-DECKBUILDER", "Lord of the Rings fan?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("LOTR", "Yes"));
+	question.getAnswers().add(new Answer("NO-LOTR", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>NO-QUESTING>NO-DECKBUILDER>LOTR"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "NO-QUESTING" )
+	Answer( name == "NO-DECKBUILDER" )
+	Answer( name == "LOTR" )
+then
+    Question question = new Question("SOLUTION", "War of the Ring", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>NO-QUESTING>NO-DECKBUILDER>NO-LOTR"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "NO-QUESTING" )
+	Answer( name == "NO-DECKBUILDER" )
+	Answer( name == "NO-LOTR" )
+then
+	Question question = new Question("NO-LOTR", "How about castle defense?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("CASTLE-DEFENSE", "Sounds fun!"));
+	question.getAnswers().add(new Answer("NO-CASTLE-DEFENSE", "Not for me"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>NO-QUESTING>NO-DECKBUILDER>NO-LOTR>CASTLE-DEFENSE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "NO-QUESTING" )
+	Answer( name == "NO-DECKBUILDER" )
+	Answer( name == "NO-LOTR" )
+	Answer( name == "CASTLE-DEFENSE" )
+then
+	Question question = new Question("CASTLE-DEFENSE", "Cooperative or Competitive?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("COOPERATIVE", "Competitive"));
+	question.getAnswers().add(new Answer("COMPETITIVE", "Cooperative"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>NO-QUESTING>NO-DECKBUILDER>NO-LOTR>CASTLE-DEFENSE>COOPERATIVE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "NO-QUESTING" )
+	Answer( name == "NO-DECKBUILDER" )
+	Answer( name == "NO-LOTR" )
+	Answer( name == "CASTLE-DEFENSE" )
+	Answer( name == "COOPERATIVE" )
+then
+    Question question = new Question("SOLUTION", "Dragon Rampage", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>NO-QUESTING>NO-DECKBUILDER>NO-LOTR>CASTLE-DEFENSE>COMPETITIVE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "NO-QUESTING" )
+	Answer( name == "NO-DECKBUILDER" )
+	Answer( name == "NO-LOTR" )
+	Answer( name == "CASTLE-DEFENSE" )
+	Answer( name == "COMPETITIVE" )
+then
+    Question question = new Question("SOLUTION", "Castle Panic", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>NO-QUESTING>NO-DECKBUILDER>NO-LOTR>NO-CASTLE-DEFENSE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "NO-QUESTING" )
+	Answer( name == "NO-DECKBUILDER" )
+	Answer( name == "NO-LOTR" )
+	Answer( name == "NO-CASTLE-DEFENSE" )
+then
+	Question question = new Question("NO-CASTLE-DEFENSE", "Conquest in a fantasy world?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("FANTASY-CONQUEST", "Yes"));
+	question.getAnswers().add(new Answer("NO-FANTASY-CONQUEST", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>NO-QUESTING>NO-DECKBUILDER>NO-LOTR>NO-CASTLE-DEFENSE>FANTASY-CONQUEST"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "NO-QUESTING" )
+	Answer( name == "NO-DECKBUILDER" )
+	Answer( name == "NO-LOTR" )
+	Answer( name == "NO-CASTLE-DEFENSE" )
+	Answer( name == "FANTASY-CONQUEST" )
+then
+	Question question = new Question("FANTASY-CONQUEST", "Epic?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("LONG", "Yes! It's gotta be big"));
+	question.getAnswers().add(new Answer("SHORT", "No, keep it quick"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>NO-QUESTING>NO-DECKBUILDER>NO-LOTR>NO-CASTLE-DEFENSE>FANTASY-CONQUEST>LONG"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "NO-QUESTING" )
+	Answer( name == "NO-DECKBUILDER" )
+	Answer( name == "NO-LOTR" )
+	Answer( name == "NO-CASTLE-DEFENSE" )
+	Answer( name == "FANTASY-CONQUEST" )
+	Answer( name == "LONG" )
+then
+    Question question = new Question("SOLUTION", "Runewars", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>NO-QUESTING>NO-DECKBUILDER>NO-LOTR>NO-CASTLE-DEFENSE>FANTASY-CONQUEST>SHORT"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "NO-QUESTING" )
+	Answer( name == "NO-DECKBUILDER" )
+	Answer( name == "NO-LOTR" )
+	Answer( name == "NO-CASTLE-DEFENSE" )
+	Answer( name == "FANTASY-CONQUEST" )
+	Answer( name == "SHORT" )
+then
+    Question question = new Question("SOLUTION", "Small World", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>NO-QUESTING>NO-DECKBUILDER>NO-LOTR>NO-CASTLE-DEFENSE>NO-FANTASY-CONQUEST"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "NO-QUESTING" )
+	Answer( name == "NO-DECKBUILDER" )
+	Answer( name == "NO-LOTR" )
+	Answer( name == "NO-CASTLE-DEFENSE" )
+	Answer( name == "NO-FANTASY-CONQUEST" )
+then
+	Question question = new Question("NO-FANTASY-CONQUEST", "Everyday life, eh?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("BUSINESS", "Running a business"));
+	question.getAnswers().add(new Answer("RELAX", "Relaxing after work"));
+	question.getAnswers().add(new Answer("FIGHT-BUSINESS-RIVALS", "Annihilating your business rivals"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>NO-QUESTING>NO-DECKBUILDER>NO-LOTR>NO-CASTLE-DEFENSE>NO-FANTASY-CONQUEST>BUSINESS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "NO-QUESTING" )
+	Answer( name == "NO-DECKBUILDER" )
+	Answer( name == "NO-LOTR" )
+	Answer( name == "NO-CASTLE-DEFENSE" )
+	Answer( name == "NO-FANTASY-CONQUEST" )
+	Answer( name == "BUSINESS" )
+then
+    Question question = new Question("SOLUTION", "Dungeon Petz", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>NO-QUESTING>NO-DECKBUILDER>NO-LOTR>NO-CASTLE-DEFENSE>NO-FANTASY-CONQUEST>RELAX"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "NO-QUESTING" )
+	Answer( name == "NO-DECKBUILDER" )
+	Answer( name == "NO-LOTR" )
+	Answer( name == "NO-CASTLE-DEFENSE" )
+	Answer( name == "NO-FANTASY-CONQUEST" )
+	Answer( name == "RELAX" )
+then
+    Question question = new Question("SOLUTION", "Red Dragon Inn", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>NO-QUESTING>NO-DECKBUILDER>NO-LOTR>NO-CASTLE-DEFENSE>NO-FANTASY-CONQUEST>FIGHT-BUSINESS-RIVALS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "NO-QUESTING" )
+	Answer( name == "NO-DECKBUILDER" )
+	Answer( name == "NO-LOTR" )
+	Answer( name == "NO-CASTLE-DEFENSE" )
+	Answer( name == "NO-FANTASY-CONQUEST" )
+	Answer( name == "FIGHT-BUSINESS-RIVALS" )
+then
+    Question question = new Question("SOLUTION", "Mage Wars", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>QUESTING"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "QUESTING" )
+then
+	Question question = new Question("QUESTING", "Competitive or Cooperative?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("COMPETITIVE", "Competitive"));
+	question.getAnswers().add(new Answer("BACKSTAB", "Cooperative - if I can backstab"));
+	question.getAnswers().add(new Answer("COOPERATIVE", "Cooperative"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>QUESTING>COMPETITIVE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "QUESTING" )
+	Answer( name == "COMPETITIVE" )
+then
+	Question question = new Question("COMPETITIVE", "Mind getting trounced by random events?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("NO-RANDOM", "Yes, Strategy matters"));
+	question.getAnswers().add(new Answer("RANDOM", "No, it's the experience that counts"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>QUESTING>COMPETITIVE>NO-RANDOM"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "QUESTING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "NO-RANDOM" )
+then
+    Question question = new Question("SOLUTION", "Mage Knight", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>QUESTING>COMPETITIVE>RANDOM"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "QUESTING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "RANDOM" )
+then
+	Question question = new Question("RANDOM", "Is storytelling important?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("STORY-TELLING", "Yes"));
+	question.getAnswers().add(new Answer("NO-STORY-TELLING", "Not as much as combat!"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>QUESTING>COMPETITIVE>RANDOM>STORY-TELLING"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "QUESTING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "RANDOM" )
+	Answer( name == "STORY-TELLING" )
+then
+    Question question = new Question("SOLUTION", "Tales of the Arabian Nights", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>QUESTING>COMPETITIVE>RANDOM>NO-STORY-TELLING"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "QUESTING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "RANDOM" )
+	Answer( name == "NO-STORY-TELLING" )
+then
+    Question question = new Question("SOLUTION", "Talisman", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>QUESTING>BACKSTAB"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "QUESTING" )
+	Answer( name == "BACKSTAB" )
+then
+    Question question = new Question("SOLUTION", "Shadows Over Camelot", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>QUESTING>COOPERATIVE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "QUESTING" )
+	Answer( name == "COOPERATIVE" )
+then
+	Question question = new Question("COOPERATIVE", "Board game or card game?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("BOARD", "Boards"));
+	question.getAnswers().add(new Answer("CARDS", "Cards"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>QUESTING>COOPERATIVE>BOARD"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "QUESTING" )
+	Answer( name == "COOPERATIVE" )
+	Answer( name == "BOARD" )
+then
+    Question question = new Question("SOLUTION", "Defenders of the realm", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>NO-MANAGING-DUNGEON>QUESTING>COOPERATIVE>CARDS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "NO-MANAGING-DUNGEON" )
+	Answer( name == "QUESTING" )
+	Answer( name == "COOPERATIVE" )
+	Answer( name == "CARDS" )
+then
+    Question question = new Question("SOLUTION", "Lord if the Rings Living Card Game", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>FANTASY>NO-DUNGEON-CRAWL>MANAGING-DUNGEON"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "FANTASY" )
+	Answer( name == "NO-DUNGEON-CRAWL" )
+	Answer( name == "MANAGING-DUNGEON" )
+then
+    Question question = new Question("SOLUTION", "Dungeon Lords", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>HORROR"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "HORROR" )
+then
+	Question question = new Question("HORROR", "What's your favourite monster?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("ZOMBIES", "Zombies"));
+	question.getAnswers().add(new Answer("CTHULHU", "Cthulhu"));
+	question.getAnswers().add(new Answer("CLASSIC-MOVIE-MONSTERS", "Classic Movie Monsters"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>HORROR>ZOMBIES"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "HORROR" )
+	Answer( name == "ZOMBIES" )
+then
+	Question question = new Question("ZOMBIES", "Boards or Cards?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("BOARD", "Board Game"));
+	question.getAnswers().add(new Answer("CARDS", "Card Game"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>HORROR>ZOMBIES>BOARD"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "HORROR" )
+	Answer( name == "ZOMBIES" )
+	Answer( name == "BOARD" )
+then
+	Question question = new Question("BOARD", "Survival of the Fittest or Zombies vs Humans", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("FITTEST-SURVIVAL", "Survival of the Fittest"));
+	question.getAnswers().add(new Answer("ZOMBIES-VS-HUMANS", "Zombies vs. Humans"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>HORROR>ZOMBIES>BOARD>FITTEST-SURVIVAL"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "HORROR" )
+	Answer( name == "ZOMBIES" )
+	Answer( name == "BOARD" )
+	Answer( name == "FITTEST-SURVIVAL" )
+then
+    Question question = new Question("SOLUTION", "City of Horror", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>HORROR>ZOMBIES>BOARD>ZOMBIES-VS-HUMANS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "HORROR" )
+	Answer( name == "ZOMBIES" )
+	Answer( name == "BOARD" )
+	Answer( name == "ZOMBIES-VS-HUMANS" )
+then
+	Question question = new Question("ZOMBIES-VS-HUMANS", "Does anyone want to play as the zombies?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("ALL-HUMANS", "We're all humans here"));
+	question.getAnswers().add(new Answer("PLAYER-ZOMBIE", "Sure! Braaaains..."));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>HORROR>ZOMBIES>BOARD>ZOMBIES-VS-HUMANS>ALL-HUMANS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "HORROR" )
+	Answer( name == "ZOMBIES" )
+	Answer( name == "BOARD" )
+	Answer( name == "ZOMBIES-VS-HUMANS" )
+	Answer( name == "ALL-HUMANS" )
+then
+    Question question = new Question("SOLUTION", "Zombicide", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>HORROR>ZOMBIES>BOARD>ZOMBIES-VS-HUMANS>PLAYER-ZOMBIE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "HORROR" )
+	Answer( name == "ZOMBIES" )
+	Answer( name == "BOARD" )
+	Answer( name == "ZOMBIES-VS-HUMANS" )
+	Answer( name == "PLAYER-ZOMBIE" )
+then
+    Question question = new Question("SOLUTION", "Last Night on Earth", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>HORROR>ZOMBIES>CARDS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "HORROR" )
+	Answer( name == "ZOMBIES" )
+	Answer( name == "CARDS" )
+then
+    Question question = new Question("SOLUTION", "Resident Evil Deckbuilding Game", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>HORROR>CTHULHU"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "HORROR" )
+	Answer( name == "CTHULHU" )
+then
+	Question question = new Question("CTHULHU", "Ever wanted to play on his side?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("SIDE-WITH-ELDER-GOD", "Well, maybe a little..."));
+	question.getAnswers().add(new Answer("NO-SIDE-WITH-ELDER-GOD", "Side with Elder Gods? No! Humanity stands together"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>HORROR>CTHULHU>SIDE-WITH-ELDER-GOD"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "HORROR" )
+	Answer( name == "CTHULHU" )
+	Answer( name == "SIDE-WITH-ELDER-GOD" )
+then
+    Question question = new Question("SOLUTION", "Mansions of Madness", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>HORROR>CTHULHU>NO-SIDE-WITH-ELDER-GOD"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "HORROR" )
+	Answer( name == "CTHULHU" )
+	Answer( name == "NO-SIDE-WITH-ELDER-GOD" )
+then
+	Question question = new Question("NO-SIDE-WITH-ELDER-GOD", "An epic investigation or a gateway game?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("EPIC-INVESTIGATION", "I want an epic!"));
+	question.getAnswers().add(new Answer("GATEWAY-GAME", "Gateway, please"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>HORROR>CTHULHU>NO-SIDE-WITH-ELDER-GOD>EPIC-INVESTIGATION"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "HORROR" )
+	Answer( name == "CTHULHU" )
+	Answer( name == "NO-SIDE-WITH-ELDER-GOD" )
+	Answer( name == "EPIC-INVESTIGATION" )
+then
+    Question question = new Question("SOLUTION", "Arkham Horror", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>HORROR>CTHULHU>NO-SIDE-WITH-ELDER-GOD>GATEWAY-GAME"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "HORROR" )
+	Answer( name == "CTHULHU" )
+	Answer( name == "NO-SIDE-WITH-ELDER-GOD" )
+	Answer( name == "GATEWAY-GAME" )
+then
+    Question question = new Question("SOLUTION", "Elder Sign", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>HORROR>CLASSIC-MOVIE-MONSTERS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "HORROR" )
+	Answer( name == "CLASSIC-MOVIE-MONSTERS" )
+then
+	Question question = new Question("CLASSIC-MOVIE-MONSTERS", "Card-based combat or a mystery?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("COMBAT", "I'll crush you!"));
+	question.getAnswers().add(new Answer("MYSTERY", "I'd rather be a detective"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>HORROR>CLASSIC-MOVIE-MONSTERS>COMBAT"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "HORROR" )
+	Answer( name == "CLASSIC-MOVIE-MONSTERS" )
+	Answer( name == "COMBAT" )
+then
+    Question question = new Question("SOLUTION", "Nightfall", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>HORROR>CLASSIC-MOVIE-MONSTERS>MYSTERY"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "HORROR" )
+	Answer( name == "CLASSIC-MOVIE-MONSTERS" )
+	Answer( name == "MYSTERY" )
+then
+    Question question = new Question("SOLUTION", "Betrayal at House on the Hill", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+then
+	Question question = new Question("SCIENCE-FICTION", "Star Wars fan?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("NO-STAR-WARS", "No"));
+	question.getAnswers().add(new Answer("STAR-WARS", "Yes"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+then
+	Question question = new Question("NO-STAR-WARS", "Star Trek, then?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("STAR-TREK", "Yes"));
+	question.getAnswers().add(new Answer("NO-STAR-TREK", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>STAR-TREK"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "STAR-TREK" )
+then
+	Question question = new Question("STAR-TREK", "One-on-one or working together?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("COMPETITIVE", "Competitive"));
+	question.getAnswers().add(new Answer("COOPERATIVE", "Cooperative"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>STAR-TREK>COMPETITIVE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "STAR-TREK" )
+	Answer( name == "COMPETITIVE" )
+then
+    Question question = new Question("SOLUTION", "Star Trek: Fleet Captains", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>STAR-TREK>COOPERATIVE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "STAR-TREK" )
+	Answer( name == "COOPERATIVE" )
+then
+    Question question = new Question("SOLUTION", "Star Trek Expeditions", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+then
+	Question question = new Question("NO-STAR-TREK", "Battlestar Galactica?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("BATTLE-STAR-GALACTICA", "Yes"));
+	question.getAnswers().add(new Answer("NO-BATTLE-STAR-GALACTICA", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>BATTLE-STAR-GALACTICA"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "BATTLE-STAR-GALACTICA" )
+then
+    Question question = new Question("SOLUTION", "Battlestar Galactica: the Board Game", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+then
+	Question question = new Question("NO-BATTLE-STAR-GALACTICA", "Explore, Expand, Exploit, Exterminate?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("EXPLORE-EXPAND-EXPLOIT-EXTERMINATE", "Of course!"));
+	question.getAnswers().add(new Answer("NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE", "That's not right!"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>EXPLORE-EXPAND-EXPLOIT-EXTERMINATE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+then
+	Question question = new Question("EXPLORE-EXPAND-EXPLOIT-EXTERMINATE", "So, just how epic are we getting?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("LONG", "We've got all day"));
+	question.getAnswers().add(new Answer("SHORT", "It is a work night..."));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>EXPLORE-EXPAND-EXPLOIT-EXTERMINATE>LONG"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+	Answer( name == "LONG" )
+then
+    Question question = new Question("SOLUTION", "Twilight Imperium: 3rd Edition", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>EXPLORE-EXPAND-EXPLOIT-EXTERMINATE>SHORT"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+	Answer( name == "SHORT" )
+then
+    Question question = new Question("SOLUTION", "Eclipse", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+then
+	Question question = new Question("NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE", "How about being an alien race?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("NO-PLAYER-ALIEN", "Maybe not"));
+	question.getAnswers().add(new Answer("PLAYER-ALIEN", "That sounds fun"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE>NO-PLAYER-ALIEN"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+	Answer( name == "NO-PLAYER-ALIEN" )
+then
+	Question question = new Question("NO-PLAYER-ALIEN", "How about a card game?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("CARDS", "Sure, that works"));
+	question.getAnswers().add(new Answer("BOARD", "I like my boards"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE>NO-PLAYER-ALIEN>CARDS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+	Answer( name == "NO-PLAYER-ALIEN" )
+	Answer( name == "CARDS" )
+then
+	Question question = new Question("CARDS", "A Deck Builder?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("DECK-BUILDER", "Yes"));
+	question.getAnswers().add(new Answer("NO-DECK-BUILDER", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE>NO-PLAYER-ALIEN>CARDS>DECK-BUILDER"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+	Answer( name == "NO-PLAYER-ALIEN" )
+	Answer( name == "CARDS" )
+	Answer( name == "DECK-BUILDER" )
+then
+    Question question = new Question("SOLUTION", "Core Worlds", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE>NO-PLAYER-ALIEN>CARDS>NO-DECK-BUILDER"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+	Answer( name == "NO-PLAYER-ALIEN" )
+	Answer( name == "CARDS" )
+	Answer( name == "NO-DECK-BUILDER" )
+then
+	Question question = new Question("NO-DECK-BUILDER", "A Living Card Game?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("LIVING-CARD", "Yes"));
+	question.getAnswers().add(new Answer("NO-LIVING-CARD", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE>NO-PLAYER-ALIEN>CARDS>NO-DECK-BUILDER>LIVING-CARD"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+	Answer( name == "NO-PLAYER-ALIEN" )
+	Answer( name == "CARDS" )
+	Answer( name == "NO-DECK-BUILDER" )
+	Answer( name == "LIVING-CARD" )
+then
+    Question question = new Question("SOLUTION", "Android: Netrunner", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE>NO-PLAYER-ALIEN>CARDS>NO-DECK-BUILDER>NO-LIVING-CARD"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+	Answer( name == "NO-PLAYER-ALIEN" )
+	Answer( name == "CARDS" )
+	Answer( name == "NO-DECK-BUILDER" )
+	Answer( name == "NO-LIVING-CARD" )
+then
+    Question question = new Question("SOLUTION", "Race for the Galaxy", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE>NO-PLAYER-ALIEN>BOARD"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+	Answer( name == "NO-PLAYER-ALIEN" )
+	Answer( name == "BOARD" )
+then
+	Question question = new Question("BOARD", "If not an alien, I'll be a...", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("ATHLETE", "Athlete"));
+	question.getAnswers().add(new Answer("GALACTIC-CORPORATION", "Galactic Corporation"));
+	question.getAnswers().add(new Answer("SPACE-CREW-ON-MISSION", "Space Crew on a Mission"));
+	question.getAnswers().add(new Answer("MERCHANT", "Merchant"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE>NO-PLAYER-ALIEN>BOARD>ATHLETE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+	Answer( name == "NO-PLAYER-ALIEN" )
+	Answer( name == "BOARD" )
+	Answer( name == "ATHLETE" )
+then
+    Question question = new Question("SOLUTION", "Dreadball: The Futuristic Sport Game", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE>NO-PLAYER-ALIEN>BOARD>GALACTIC-CORPORATION"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+	Answer( name == "NO-PLAYER-ALIEN" )
+	Answer( name == "BOARD" )
+	Answer( name == "GALACTIC-CORPORATION" )
+then
+    Question question = new Question("SOLUTION", "Phantom League", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE>NO-PLAYER-ALIEN>BOARD>SPACE-CREW-ON-MISSION"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+	Answer( name == "NO-PLAYER-ALIEN" )
+	Answer( name == "BOARD" )
+	Answer( name == "SPACE-CREW-ON-MISSION" )
+then
+	Question question = new Question("SPACE-CREW-ON-MISSION", "How will you succeed?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("FAST-PLANNING", "Teamwork and high-speed planning"));
+	question.getAnswers().add(new Answer("DEXTERITY", "Teamwork and dexterity"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE>NO-PLAYER-ALIEN>BOARD>SPACE-CREW-ON-MISSION>FAST-PLANNING"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+	Answer( name == "NO-PLAYER-ALIEN" )
+	Answer( name == "BOARD" )
+	Answer( name == "SPACE-CREW-ON-MISSION" )
+	Answer( name == "FAST-PLANNING" )
+then
+    Question question = new Question("SOLUTION", "Space Alert", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE>NO-PLAYER-ALIEN>BOARD>SPACE-CREW-ON-MISSION>DEXTERITY"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+	Answer( name == "NO-PLAYER-ALIEN" )
+	Answer( name == "BOARD" )
+	Answer( name == "SPACE-CREW-ON-MISSION" )
+	Answer( name == "DEXTERITY" )
+then
+    Question question = new Question("SOLUTION", "Space Cadets", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE>NO-PLAYER-ALIEN>BOARD>MERCHANT"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+	Answer( name == "NO-PLAYER-ALIEN" )
+	Answer( name == "BOARD" )
+	Answer( name == "MERCHANT" )
+then
+	Question question = new Question("MERCHANT", "Seriously?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("SERIOUS", "It's serious business"));
+	question.getAnswers().add(new Answer("NO-SERIOUS", "Nah, we just want a giggle"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE>NO-PLAYER-ALIEN>BOARD>MERCHANT>SERIOUS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+	Answer( name == "NO-PLAYER-ALIEN" )
+	Answer( name == "BOARD" )
+	Answer( name == "MERCHANT" )
+	Answer( name == "SERIOUS" )
+then
+    Question question = new Question("SOLUTION", "Merchant of Venus", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE>NO-PLAYER-ALIEN>BOARD>MERCHANT>NO-SERIOUS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+	Answer( name == "NO-PLAYER-ALIEN" )
+	Answer( name == "BOARD" )
+	Answer( name == "MERCHANT" )
+	Answer( name == "NO-SERIOUS" )
+then
+    Question question = new Question("SOLUTION", "Galaxy Trucker", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE>PLAYER-ALIEN"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+	Answer( name == "PLAYER-ALIEN" )
+then
+	Question question = new Question("PLAYER-ALIEN", "Doing battle...", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("FIGHT-IN-SPACE", "In Space"));
+	question.getAnswers().add(new Answer("FIGHT-FOR-GALACTIC-CENTRE", "For the Galactic Centre"));
+	question.getAnswers().add(new Answer("FIGHT-FOR-EARTH", "For Earth!"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE>PLAYER-ALIEN>FIGHT-IN-SPACE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+	Answer( name == "PLAYER-ALIEN" )
+	Answer( name == "FIGHT-IN-SPACE" )
+then
+    Question question = new Question("SOLUTION", "Cosmic Encounter", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE>PLAYER-ALIEN>FIGHT-FOR-GALACTIC-CENTRE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+	Answer( name == "PLAYER-ALIEN" )
+	Answer( name == "FIGHT-FOR-GALACTIC-CENTRE" )
+then
+    Question question = new Question("SOLUTION", "Rex: Final Days of an Empire", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>NO-STAR-WARS>NO-STAR-TREK>NO-BATTLE-STAR-GALACTICA>NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE>PLAYER-ALIEN>FIGHT-FOR-EARTH"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "NO-STAR-WARS" )
+	Answer( name == "NO-STAR-TREK" )
+	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
+	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
+	Answer( name == "PLAYER-ALIEN" )
+	Answer( name == "FIGHT-FOR-EARTH" )
+then
+    Question question = new Question("SOLUTION", "Conquest of Planet Earth", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>STAR-WARS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "STAR-WARS" )
+then
+	Question question = new Question("STAR-WARS", "Grand adventure or tactical space combat?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("ADVENTURE", "Adventure"));
+	question.getAnswers().add(new Answer("COMBAT", "Pew! Pew!"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>STAR-WARS>ADVENTURE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "STAR-WARS" )
+	Answer( name == "ADVENTURE" )
+then
+    Question question = new Question("SOLUTION", "Star Wars Living Card Game", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>THEME>SCIENCE-FICTION>STAR-WARS>COMBAT"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "THEME" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "STAR-WARS" )
+	Answer( name == "COMBAT" )
+then
+    Question question = new Question("SOLUTION", "Star Wars: X-WingStar Wars Living Miniature Game", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+then
+	Question question = new Question("NO-THEME", "What's most important to you?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("MECHANICS", "Give me good mechanics over theme"));
+	question.getAnswers().add(new Answer("NON-GAMERS", "I'm playing with Non-Gamers"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>MECHANICS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+then
+	Question question = new Question("MECHANICS", "Do you want a route- or network building game?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("NO-ROUTE-OR-NETWORK-BUILDING", "Not really"));
+	question.getAnswers().add(new Answer("ROUTE-OR-NETWORK-BUILDING", "Trains & infrastructure? Sure!"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+then
+	Question question = new Question("NO-ROUTE-OR-NETWORK-BUILDING", "Civilization building, then?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("CIVILIZATION-BUILDING", "Yes"));
+	question.getAnswers().add(new Answer("NO-CIVILIZATION-BUILDING", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>CIVILIZATION-BUILDING"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "CIVILIZATION-BUILDING" )
+then
+	Question question = new Question("CIVILIZATION-BUILDING", "Do you want to play with technology trees?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("TECHNOLOGY-TREES", "Yes"));
+	question.getAnswers().add(new Answer("NO-TECHNOLOGY-TREES", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>CIVILIZATION-BUILDING>TECHNOLOGY-TREES"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "CIVILIZATION-BUILDING" )
+	Answer( name == "TECHNOLOGY-TREES" )
+then
+	Question question = new Question("TECHNOLOGY-TREES", "How complex?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("HARD", "Pretty Complex"));
+	question.getAnswers().add(new Answer("SIMPLE", "Let's keep it simpler"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>CIVILIZATION-BUILDING>TECHNOLOGY-TREES>HARD"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "CIVILIZATION-BUILDING" )
+	Answer( name == "TECHNOLOGY-TREES" )
+	Answer( name == "HARD" )
+then
+	Question question = new Question("HARD", " Want to see your world on a map?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("MAP", "Yes"));
+	question.getAnswers().add(new Answer("NO-MAP", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>CIVILIZATION-BUILDING>TECHNOLOGY-TREES>HARD>MAP"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "CIVILIZATION-BUILDING" )
+	Answer( name == "TECHNOLOGY-TREES" )
+	Answer( name == "HARD" )
+	Answer( name == "MAP" )
+then
+    Question question = new Question("SOLUTION", "Sid Meier's Civilization: The Board Game", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>CIVILIZATION-BUILDING>TECHNOLOGY-TREES>HARD>NO-MAP"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "CIVILIZATION-BUILDING" )
+	Answer( name == "TECHNOLOGY-TREES" )
+	Answer( name == "HARD" )
+	Answer( name == "NO-MAP" )
+then
+    Question question = new Question("SOLUTION", "Through the Ages: A Story of Civilization ", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>CIVILIZATION-BUILDING>TECHNOLOGY-TREES>SIMPLE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "CIVILIZATION-BUILDING" )
+	Answer( name == "TECHNOLOGY-TREES" )
+	Answer( name == "SIMPLE" )
+then
+    Question question = new Question("SOLUTION", "Clash of Cultures", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>CIVILIZATION-BUILDING>NO-TECHNOLOGY-TREES"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "CIVILIZATION-BUILDING" )
+	Answer( name == "NO-TECHNOLOGY-TREES" )
+then
+    Question question = new Question("SOLUTION", "7 Wonders", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+then
+	Question question = new Question("NO-CIVILIZATION-BUILDING", "A cooperative game?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("COMPETITIVE", "Everybody's on their own"));
+	question.getAnswers().add(new Answer("COOPERATIVE", "Yes, completely"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COMPETITIVE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COMPETITIVE" )
+then
+	Question question = new Question("COMPETITIVE", "More than 2 players?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("TWO-PLAYERS", "No"));
+	question.getAnswers().add(new Answer("MANY-PLAYERS", "Yes"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COMPETITIVE>TWO-PLAYERS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "TWO-PLAYERS" )
+then
+	Question question = new Question("TWO-PLAYERS", "How long do you have?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("SHORT", "30 minutes or less"));
+	question.getAnswers().add(new Answer("LONG", "At least an hour"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COMPETITIVE>TWO-PLAYERS>SHORT"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "TWO-PLAYERS" )
+	Answer( name == "SHORT" )
+then
+	Question question = new Question("SHORT", "Are you explorer or builder?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("EXPLORATION", "Explorer"));
+	question.getAnswers().add(new Answer("BUILDING", "Builder"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COMPETITIVE>TWO-PLAYERS>SHORT>EXPLORATION"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "TWO-PLAYERS" )
+	Answer( name == "SHORT" )
+	Answer( name == "EXPLORATION" )
+then
+    Question question = new Question("SOLUTION", "Lost Cities", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COMPETITIVE>TWO-PLAYERS>SHORT>BUILDING"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "TWO-PLAYERS" )
+	Answer( name == "SHORT" )
+	Answer( name == "BUILDING" )
+then
+    Question question = new Question("SOLUTION", "Agricola: All Creatures Big & Small", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COMPETITIVE>TWO-PLAYERS>LONG"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "TWO-PLAYERS" )
+	Answer( name == "LONG" )
+then
+	Question question = new Question("LONG", "Want to rewrite history?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("REWRITE-HISTORY", "Yes - especially the Cold War"));
+	question.getAnswers().add(new Answer("MYSTERY", "No I prefer mysteries"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COMPETITIVE>TWO-PLAYERS>LONG>REWRITE-HISTORY"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "TWO-PLAYERS" )
+	Answer( name == "LONG" )
+	Answer( name == "REWRITE-HISTORY" )
+then
+    Question question = new Question("SOLUTION", "Twilight Struggle", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COMPETITIVE>TWO-PLAYERS>LONG>MYSTERY"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "TWO-PLAYERS" )
+	Answer( name == "LONG" )
+	Answer( name == "MYSTERY" )
+then
+    Question question = new Question("SOLUTION", "Mr. Jack", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COMPETITIVE>MANY-PLAYERS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "MANY-PLAYERS" )
+then
+	Question question = new Question("MANY-PLAYERS", "Does it have to be new?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("CLASSIC", "No, classics are classics for a reason"));
+	question.getAnswers().add(new Answer("NO-CLASSIC", "Yes, we've gotten better at designing"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COMPETITIVE>MANY-PLAYERS>CLASSIC"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "CLASSIC" )
+then
+	Question question = new Question("CLASSIC", "Classic board or card games?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("CARDS", "Shuffling is fun!"));
+	question.getAnswers().add(new Answer("BOARD", "Boards are a must!"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COMPETITIVE>MANY-PLAYERS>CLASSIC>CARDS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "CLASSIC" )
+	Answer( name == "CARDS" )
+then
+	Question question = new Question("CARDS", "Want to build your own deck?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("DECKBUILDER", "Yes"));
+	question.getAnswers().add(new Answer("NO-DECKBUILDER", "I'd rather build a tableau"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COMPETITIVE>MANY-PLAYERS>CLASSIC>CARDS>DECKBUILDER"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "CLASSIC" )
+	Answer( name == "CARDS" )
+	Answer( name == "DECKBUILDER" )
+then
+    Question question = new Question("SOLUTION", "Dominion", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COMPETITIVE>MANY-PLAYERS>CLASSIC>CARDS>NO-DECKBUILDER"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "CLASSIC" )
+	Answer( name == "CARDS" )
+	Answer( name == "NO-DECKBUILDER" )
+then
+    Question question = new Question("SOLUTION", "St. Petersburg", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COMPETITIVE>MANY-PLAYERS>CLASSIC>BOARD"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "CLASSIC" )
+	Answer( name == "BOARD" )
+then
+	Question question = new Question("BOARD", "Developing on a small or grand scale?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("GRAND-SCALE", "Build me a nation!"));
+	question.getAnswers().add(new Answer("SMALL-SCALE", "I just want my bit of land"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COMPETITIVE>MANY-PLAYERS>CLASSIC>BOARD>GRAND-SCALE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "CLASSIC" )
+	Answer( name == "BOARD" )
+	Answer( name == "GRAND-SCALE" )
+then
+    Question question = new Question("SOLUTION", "Puerto Rico", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COMPETITIVE>MANY-PLAYERS>CLASSIC>BOARD>SMALL-SCALE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "CLASSIC" )
+	Answer( name == "BOARD" )
+	Answer( name == "SMALL-SCALE" )
+then
+    Question question = new Question("SOLUTION", "Agricola", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COMPETITIVE>MANY-PLAYERS>NO-CLASSIC"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NO-CLASSIC" )
+then
+	Question question = new Question("NO-CLASSIC", "Maybe a new twist on worker placement?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("WORKER-PLACEMENT", "Yes"));
+	question.getAnswers().add(new Answer("NO-WORKER-PLACEMENT", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COMPETITIVE>MANY-PLAYERS>NO-CLASSIC>WORKER-PLACEMENT"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NO-CLASSIC" )
+	Answer( name == "WORKER-PLACEMENT" )
+then
+    Question question = new Question("SOLUTION", "Tzolk'in: The Mayan Calender", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COMPETITIVE>MANY-PLAYERS>NO-CLASSIC>NO-WORKER-PLACEMENT"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NO-CLASSIC" )
+	Answer( name == "NO-WORKER-PLACEMENT" )
+then
+	Question question = new Question("NO-WORKER-PLACEMENT", "Building an empire or working magic?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("MAGIC", "Magic!"));
+	question.getAnswers().add(new Answer("EMPIRE", "Empire!"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COMPETITIVE>MANY-PLAYERS>NO-CLASSIC>NO-WORKER-PLACEMENT>MAGIC"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NO-CLASSIC" )
+	Answer( name == "NO-WORKER-PLACEMENT" )
+	Answer( name == "MAGIC" )
+then
+    Question question = new Question("SOLUTION", "Seasons", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COMPETITIVE>MANY-PLAYERS>NO-CLASSIC>NO-WORKER-PLACEMENT>EMPIRE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COMPETITIVE" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NO-CLASSIC" )
+	Answer( name == "NO-WORKER-PLACEMENT" )
+	Answer( name == "EMPIRE" )
+then
+    Question question = new Question("SOLUTION", "Kingdom Builder", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COOPERATIVE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COOPERATIVE" )
+then
+	Question question = new Question("COOPERATIVE", "How hard do you want to make it?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("SIMPLE", "Easy"));
+	question.getAnswers().add(new Answer("MEDIUM-DIFFICULTY", "Medium"));
+	question.getAnswers().add(new Answer("HARD", "Difficult"));
+	question.getAnswers().add(new Answer("VERY-HARD", "Very Difficult"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COOPERATIVE>SIMPLE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COOPERATIVE" )
+	Answer( name == "SIMPLE" )
+then
+    Question question = new Question("SOLUTION", "Forbidden Island", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COOPERATIVE>MEDIUM-DIFFICULTY"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COOPERATIVE" )
+	Answer( name == "MEDIUM-DIFFICULTY" )
+then
+    Question question = new Question("SOLUTION", "Flash Point: Fire Rescue", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COOPERATIVE>HARD"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COOPERATIVE" )
+	Answer( name == "HARD" )
+then
+    Question question = new Question("SOLUTION", "Pandemic", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>NO-ROUTE-OR-NETWORK-BUILDING>NO-CIVILIZATION-BUILDING>COOPERATIVE>VERY-HARD"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "NO-CIVILIZATION-BUILDING" )
+	Answer( name == "COOPERATIVE" )
+	Answer( name == "VERY-HARD" )
+then
+    Question question = new Question("SOLUTION", "Ghost Stories", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>ROUTE-OR-NETWORK-BUILDING"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "ROUTE-OR-NETWORK-BUILDING" )
+then
+	Question question = new Question("ROUTE-OR-NETWORK-BUILDING", "What level of complexity can your group handle?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("SIMPLE", "Low"));
+	question.getAnswers().add(new Answer("MEDIUM-DIFFICULTY", "Medium"));
+	question.getAnswers().add(new Answer("HARD", "Heavy"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>ROUTE-OR-NETWORK-BUILDING>SIMPLE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "SIMPLE" )
+then
+	Question question = new Question("SIMPLE", "Have you played Ticket to Ride?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("NO-KNOW-TICK-TO-RIDE", "No yet"));
+	question.getAnswers().add(new Answer("KNOW-TICK-TO-RIDE", "Yes. What else is out there?"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>ROUTE-OR-NETWORK-BUILDING>SIMPLE>NO-KNOW-TICK-TO-RIDE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "SIMPLE" )
+	Answer( name == "NO-KNOW-TICK-TO-RIDE" )
+then
+    Question question = new Question("SOLUTION", "Ticket to Ride", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>ROUTE-OR-NETWORK-BUILDING>SIMPLE>KNOW-TICK-TO-RIDE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "SIMPLE" )
+	Answer( name == "KNOW-TICK-TO-RIDE" )
+then
+    Question question = new Question("SOLUTION", "Chicago Express", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>ROUTE-OR-NETWORK-BUILDING>MEDIUM-DIFFICULTY"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "MEDIUM-DIFFICULTY" )
+then
+	Question question = new Question("MEDIUM-DIFFICULTY", "Want to be able to customize difficulty?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("CUSTOMIZE-DIFFICULTY", "Yes"));
+	question.getAnswers().add(new Answer("NO-CUSTOMIZE-DIFFICULTY", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>ROUTE-OR-NETWORK-BUILDING>MEDIUM-DIFFICULTY>CUSTOMIZE-DIFFICULTY"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "MEDIUM-DIFFICULTY" )
+	Answer( name == "CUSTOMIZE-DIFFICULTY" )
+then
+    Question question = new Question("SOLUTION", "Steam: Rails to Riches", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>ROUTE-OR-NETWORK-BUILDING>MEDIUM-DIFFICULTY>NO-CUSTOMIZE-DIFFICULTY"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "MEDIUM-DIFFICULTY" )
+	Answer( name == "NO-CUSTOMIZE-DIFFICULTY" )
+then
+    Question question = new Question("SOLUTION", "Thurn & Taxis", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>ROUTE-OR-NETWORK-BUILDING>HARD"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "HARD" )
+then
+	Question question = new Question("HARD", "Trains or infrastructure?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("INFRASTRUCTURE", "Infrastructure"));
+	question.getAnswers().add(new Answer("TRAINS", "Trains"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>ROUTE-OR-NETWORK-BUILDING>HARD>INFRASTRUCTURE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "HARD" )
+	Answer( name == "INFRASTRUCTURE" )
+then
+    Question question = new Question("SOLUTION", "Power Grid", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>ROUTE-OR-NETWORK-BUILDING>HARD>TRAINS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "HARD" )
+	Answer( name == "TRAINS" )
+then
+	Question question = new Question("TRAINS", "Want to play the stock market too?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("STOCK-MARKET", "Yes"));
+	question.getAnswers().add(new Answer("NO-STOCK-MARKET", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>ROUTE-OR-NETWORK-BUILDING>HARD>TRAINS>STOCK-MARKET"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "HARD" )
+	Answer( name == "TRAINS" )
+	Answer( name == "STOCK-MARKET" )
+then
+    Question question = new Question("SOLUTION", "18XX Series", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>MECHANICS>ROUTE-OR-NETWORK-BUILDING>HARD>TRAINS>NO-STOCK-MARKET"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "MECHANICS" )
+	Answer( name == "ROUTE-OR-NETWORK-BUILDING" )
+	Answer( name == "HARD" )
+	Answer( name == "TRAINS" )
+	Answer( name == "NO-STOCK-MARKET" )
+then
+    Question question = new Question("SOLUTION", "Crayon Rails Games", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>NON-GAMERS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "NON-GAMERS" )
+then
+	Question question = new Question("NON-GAMERS", "Are they kids?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("KIDS", "Yes"));
+	question.getAnswers().add(new Answer("NO-KIDS", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>NON-GAMERS>KIDS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "NON-GAMERS" )
+	Answer( name == "KIDS" )
+then
+	Question question = new Question("KIDS", "Do they like animals?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("ANIMALS", "Yes"));
+	question.getAnswers().add(new Answer("NO-ANIMALS", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>NON-GAMERS>KIDS>ANIMALS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "NON-GAMERS" )
+	Answer( name == "KIDS" )
+	Answer( name == "ANIMALS" )
+then
+	Question question = new Question("ANIMALS", "How's their attention span?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("LONG", "Pretty long"));
+	question.getAnswers().add(new Answer("SHORT", "Pretty short"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>NON-GAMERS>KIDS>ANIMALS>LONG"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "NON-GAMERS" )
+	Answer( name == "KIDS" )
+	Answer( name == "ANIMALS" )
+	Answer( name == "LONG" )
+then
+    Question question = new Question("SOLUTION", "Zooloretto", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>NON-GAMERS>KIDS>ANIMALS>SHORT"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "NON-GAMERS" )
+	Answer( name == "KIDS" )
+	Answer( name == "ANIMALS" )
+	Answer( name == "SHORT" )
+then
+    Question question = new Question("SOLUTION", "Hey! That's My Fish", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>NON-GAMERS>KIDS>NO-ANIMALS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "NON-GAMERS" )
+	Answer( name == "KIDS" )
+	Answer( name == "NO-ANIMALS" )
+then
+	Question question = new Question("NO-ANIMALS", "How about something more abstract?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("ABSTRACT", "Sure"));
+	question.getAnswers().add(new Answer("NO-ABSTRACT", "No thanks"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>NON-GAMERS>KIDS>NO-ANIMALS>ABSTRACT"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "NON-GAMERS" )
+	Answer( name == "KIDS" )
+	Answer( name == "NO-ANIMALS" )
+	Answer( name == "ABSTRACT" )
+then
+	Question question = new Question("ABSTRACT", "Anybody scared of insects?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("NO-INSECTS", "Maybe a little..."));
+	question.getAnswers().add(new Answer("INSECTS", "Nope!"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>NON-GAMERS>KIDS>NO-ANIMALS>ABSTRACT>NO-INSECTS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "NON-GAMERS" )
+	Answer( name == "KIDS" )
+	Answer( name == "NO-ANIMALS" )
+	Answer( name == "ABSTRACT" )
+	Answer( name == "NO-INSECTS" )
+then
+    Question question = new Question("SOLUTION", "Ingenious", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>NON-GAMERS>KIDS>NO-ANIMALS>ABSTRACT>INSECTS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "NON-GAMERS" )
+	Answer( name == "KIDS" )
+	Answer( name == "NO-ANIMALS" )
+	Answer( name == "ABSTRACT" )
+	Answer( name == "INSECTS" )
+then
+    Question question = new Question("SOLUTION", "Hive", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>NON-GAMERS>KIDS>NO-ANIMALS>NO-ABSTRACT"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "NON-GAMERS" )
+	Answer( name == "KIDS" )
+	Answer( name == "NO-ANIMALS" )
+	Answer( name == "NO-ABSTRACT" )
+then
+    Question question = new Question("SOLUTION", "River dragons", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>NON-GAMERS>NO-KIDS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "NON-GAMERS" )
+	Answer( name == "NO-KIDS" )
+then
+	Question question = new Question("NO-KIDS", "Do they hold grudges?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("NO-PLAYERS-HOLD-GRUDGES", "No"));
+	question.getAnswers().add(new Answer("PLAYERS-HOLD-GRUDGES", "Yes"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>NON-GAMERS>NO-KIDS>NO-PLAYERS-HOLD-GRUDGES"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "NON-GAMERS" )
+	Answer( name == "NO-KIDS" )
+	Answer( name == "NO-PLAYERS-HOLD-GRUDGES" )
+then
+    Question question = new Question("SOLUTION", "Survive: Escape from Atlantis", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>NON-GAMERS>NO-KIDS>PLAYERS-HOLD-GRUDGES"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "NON-GAMERS" )
+	Answer( name == "NO-KIDS" )
+	Answer( name == "PLAYERS-HOLD-GRUDGES" )
+then
+	Question question = new Question("PLAYERS-HOLD-GRUDGES", "Do they like trains", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("NO-TRAINS", "No"));
+	question.getAnswers().add(new Answer("TRAINS", "Yes"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>NON-GAMERS>NO-KIDS>PLAYERS-HOLD-GRUDGES>NO-TRAINS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "NON-GAMERS" )
+	Answer( name == "NO-KIDS" )
+	Answer( name == "PLAYERS-HOLD-GRUDGES" )
+	Answer( name == "NO-TRAINS" )
+then
+	Question question = new Question("NO-TRAINS", "How about rolling lots of dice?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("DICE", "Luck, be a lady!"));
+	question.getAnswers().add(new Answer("NO-DICE", "Pure strategy, please"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>STRATEGY>NO-THEME>NON-GAMERS>NO-KIDS>PLAYERS-HOLD-GRUDGES>NO-TRAINS>DICE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "NON-GAMERS" )
+	Answer( name == "NO-KIDS" )
+	Answer( name == "PLAYERS-HOLD-GRUDGES" )
+	Answer( name == "NO-TRAINS" )
+	Answer( name == "DICE" )
+then
+	Question question = new Question("DICE", "And negotiations?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("NEGOTIATE", "I love negotiating and trading"));
+	question.getAnswers().add(new Answer("NO-NEGOTIATE", "No, I'd rather do my own thing"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>NON-GAMERS>NO-KIDS>PLAYERS-HOLD-GRUDGES>NO-TRAINS>DICE>NEGOTIATE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "NON-GAMERS" )
+	Answer( name == "NO-KIDS" )
+	Answer( name == "PLAYERS-HOLD-GRUDGES" )
+	Answer( name == "NO-TRAINS" )
+	Answer( name == "DICE" )
+	Answer( name == "NEGOTIATE" )
+then
+    Question question = new Question("SOLUTION", "Settlers of Catan", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>NON-GAMERS>NO-KIDS>PLAYERS-HOLD-GRUDGES>NO-TRAINS>DICE>NO-NEGOTIATE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "NON-GAMERS" )
+	Answer( name == "NO-KIDS" )
+	Answer( name == "PLAYERS-HOLD-GRUDGES" )
+	Answer( name == "NO-TRAINS" )
+	Answer( name == "DICE" )
+	Answer( name == "NO-NEGOTIATE" )
+then
+    Question question = new Question("SOLUTION", "Stone Age", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>NON-GAMERS>NO-KIDS>PLAYERS-HOLD-GRUDGES>NO-TRAINS>NO-DICE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "NON-GAMERS" )
+	Answer( name == "NO-KIDS" )
+	Answer( name == "PLAYERS-HOLD-GRUDGES" )
+	Answer( name == "NO-TRAINS" )
+	Answer( name == "NO-DICE" )
+then
+    Question question = new Question("SOLUTION", "Carcassonne", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>STRATEGY>NO-THEME>NON-GAMERS>NO-KIDS>PLAYERS-HOLD-GRUDGES>TRAINS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "STRATEGY" )
+	Answer( name == "NO-THEME" )
+	Answer( name == "NON-GAMERS" )
+	Answer( name == "NO-KIDS" )
+	Answer( name == "PLAYERS-HOLD-GRUDGES" )
+	Answer( name == "TRAINS" )
+then
+    Question question = new Question("SOLUTION", "Ticket to Ride", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>WARGAME"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+then
+	Question question = new Question("WARGAME", "For how many players?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("MANY-PLAYERS", "2 or more"));
+	question.getAnswers().add(new Answer("ONE-PLAYER", "Just me"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>WARGAME>MANY-PLAYERS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+then
+	Question question = new Question("MANY-PLAYERS", "Do you have any wargaming experience?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("NEW-WARGAMER", "It's new to me"));
+	question.getAnswers().add(new Answer("NO-NEW-WARGAMER", "Yes"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>WARGAME>MANY-PLAYERS>NEW-WARGAMER"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NEW-WARGAMER" )
+then
+	Question question = new Question("NEW-WARGAMER", "Are you a fan of Risk?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("RISK", "Yes"));
+	question.getAnswers().add(new Answer("NO-RISK", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>WARGAME>MANY-PLAYERS>NEW-WARGAMER>RISK"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NEW-WARGAMER" )
+	Answer( name == "RISK" )
+then
+    Question question = new Question("SOLUTION", "Risk: Legacy", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>WARGAME>MANY-PLAYERS>NEW-WARGAMER>NO-RISK"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NEW-WARGAMER" )
+	Answer( name == "NO-RISK" )
+then
+	Question question = new Question("NO-RISK", "World history, or high fantasy?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("HISTORY", "History"));
+	question.getAnswers().add(new Answer("FANTASY", "Fantasy"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>WARGAME>MANY-PLAYERS>NEW-WARGAMER>NO-RISK>HISTORY"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NEW-WARGAMER" )
+	Answer( name == "NO-RISK" )
+	Answer( name == "HISTORY" )
+then
+    Question question = new Question("SOLUTION", "Memoir '44", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>WARGAME>MANY-PLAYERS>NEW-WARGAMER>NO-RISK>FANTASY"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NEW-WARGAMER" )
+	Answer( name == "NO-RISK" )
+	Answer( name == "FANTASY" )
+then
+    Question question = new Question("SOLUTION", "Battles of Westeros", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>WARGAME>MANY-PLAYERS>NO-NEW-WARGAMER"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NO-NEW-WARGAMER" )
+then
+	Question question = new Question("NO-NEW-WARGAMER", "Want to command Roman legions?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("ROMAN-LEGIONS", "Yes"));
+	question.getAnswers().add(new Answer("NO-ROMAN-LEGIONS", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>WARGAME>MANY-PLAYERS>NO-NEW-WARGAMER>ROMAN-LEGIONS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NO-NEW-WARGAMER" )
+	Answer( name == "ROMAN-LEGIONS" )
+then
+    Question question = new Question("SOLUTION", "Commands & Colors: Ancients", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>WARGAME>MANY-PLAYERS>NO-NEW-WARGAMER>NO-ROMAN-LEGIONS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NO-NEW-WARGAMER" )
+	Answer( name == "NO-ROMAN-LEGIONS" )
+then
+	Question question = new Question("NO-ROMAN-LEGIONS", "Lead 19th Century battle lines?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("NO-XIX-CENTURY-BATTLE", "No"));
+	question.getAnswers().add(new Answer("XIX-CENTURY-BATTLE", "Yes"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>WARGAME>MANY-PLAYERS>NO-NEW-WARGAMER>NO-ROMAN-LEGIONS>NO-XIX-CENTURY-BATTLE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NO-NEW-WARGAMER" )
+	Answer( name == "NO-ROMAN-LEGIONS" )
+	Answer( name == "NO-XIX-CENTURY-BATTLE" )
+then
+	Question question = new Question("NO-XIX-CENTURY-BATTLE", "How about World War II ?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("WW2", "Yes"));
+	question.getAnswers().add(new Answer("NO-WW2", "No"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>WARGAME>MANY-PLAYERS>NO-NEW-WARGAMER>NO-ROMAN-LEGIONS>NO-XIX-CENTURY-BATTLE>WW2"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NO-NEW-WARGAMER" )
+	Answer( name == "NO-ROMAN-LEGIONS" )
+	Answer( name == "NO-XIX-CENTURY-BATTLE" )
+	Answer( name == "WW2" )
+then
+	Question question = new Question("WW2", "Card- or dice- driven combat?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("DICE", "*roll roll roll*"));
+	question.getAnswers().add(new Answer("CARDS", "*shuffle shuffle*"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>WARGAME>MANY-PLAYERS>NO-NEW-WARGAMER>NO-ROMAN-LEGIONS>NO-XIX-CENTURY-BATTLE>WW2>DICE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NO-NEW-WARGAMER" )
+	Answer( name == "NO-ROMAN-LEGIONS" )
+	Answer( name == "NO-XIX-CENTURY-BATTLE" )
+	Answer( name == "WW2" )
+	Answer( name == "DICE" )
+then
+    Question question = new Question("SOLUTION", "Tide of Iron", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>WARGAME>MANY-PLAYERS>NO-NEW-WARGAMER>NO-ROMAN-LEGIONS>NO-XIX-CENTURY-BATTLE>WW2>CARDS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NO-NEW-WARGAMER" )
+	Answer( name == "NO-ROMAN-LEGIONS" )
+	Answer( name == "NO-XIX-CENTURY-BATTLE" )
+	Answer( name == "WW2" )
+	Answer( name == "CARDS" )
+then
+    Question question = new Question("SOLUTION", "Combat Commander Series", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>WARGAME>MANY-PLAYERS>NO-NEW-WARGAMER>NO-ROMAN-LEGIONS>NO-XIX-CENTURY-BATTLE>NO-WW2"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NO-NEW-WARGAMER" )
+	Answer( name == "NO-ROMAN-LEGIONS" )
+	Answer( name == "NO-XIX-CENTURY-BATTLE" )
+	Answer( name == "NO-WW2" )
+then
+	Question question = new Question("NO-WW2", "Modern Warfare, then?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("MODERN-WARFARE", "Yes, I like the immediacy"));
+	question.getAnswers().add(new Answer("NO-MODERN-WARFARE", "No, I'm tired of real wars"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>WARGAME>MANY-PLAYERS>NO-NEW-WARGAMER>NO-ROMAN-LEGIONS>NO-XIX-CENTURY-BATTLE>NO-WW2>MODERN-WARFARE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NO-NEW-WARGAMER" )
+	Answer( name == "NO-ROMAN-LEGIONS" )
+	Answer( name == "NO-XIX-CENTURY-BATTLE" )
+	Answer( name == "NO-WW2" )
+	Answer( name == "MODERN-WARFARE" )
+then
+    Question question = new Question("SOLUTION", "Labyrinth: The War on Terror", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>WARGAME>MANY-PLAYERS>NO-NEW-WARGAMER>NO-ROMAN-LEGIONS>NO-XIX-CENTURY-BATTLE>NO-WW2>NO-MODERN-WARFARE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NO-NEW-WARGAMER" )
+	Answer( name == "NO-ROMAN-LEGIONS" )
+	Answer( name == "NO-XIX-CENTURY-BATTLE" )
+	Answer( name == "NO-WW2" )
+	Answer( name == "NO-MODERN-WARFARE" )
+then
+	Question question = new Question("NO-MODERN-WARFARE", "Science Fiction or alternate history?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("ALT-HISTORY", "Alt-History"));
+	question.getAnswers().add(new Answer("SCIENCE-FICTION", "Science Fiction"));
+
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>WARGAME>MANY-PLAYERS>NO-NEW-WARGAMER>NO-ROMAN-LEGIONS>NO-XIX-CENTURY-BATTLE>NO-WW2>NO-MODERN-WARFARE>ALT-HISTORY"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NO-NEW-WARGAMER" )
+	Answer( name == "NO-ROMAN-LEGIONS" )
+	Answer( name == "NO-XIX-CENTURY-BATTLE" )
+	Answer( name == "NO-WW2" )
+	Answer( name == "NO-MODERN-WARFARE" )
+	Answer( name == "ALT-HISTORY" )
+then
+	Question question = new Question("ALT-HISTORY", "Tactical miniatures, or large-scale strategy?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("STRATEGY", "Strategic"));
+	question.getAnswers().add(new Answer("TACTICS", "Tactical"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>WARGAME>MANY-PLAYERS>NO-NEW-WARGAMER>NO-ROMAN-LEGIONS>NO-XIX-CENTURY-BATTLE>NO-WW2>NO-MODERN-WARFARE>ALT-HISTORY>STRATEGY"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NO-NEW-WARGAMER" )
+	Answer( name == "NO-ROMAN-LEGIONS" )
+	Answer( name == "NO-XIX-CENTURY-BATTLE" )
+	Answer( name == "NO-WW2" )
+	Answer( name == "NO-MODERN-WARFARE" )
+	Answer( name == "ALT-HISTORY" )
+	Answer( name == "STRATEGY" )
+then
+    Question question = new Question("SOLUTION", "Fortress America", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>WARGAME>MANY-PLAYERS>NO-NEW-WARGAMER>NO-ROMAN-LEGIONS>NO-XIX-CENTURY-BATTLE>NO-WW2>NO-MODERN-WARFARE>ALT-HISTORY>TACTICS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NO-NEW-WARGAMER" )
+	Answer( name == "NO-ROMAN-LEGIONS" )
+	Answer( name == "NO-XIX-CENTURY-BATTLE" )
+	Answer( name == "NO-WW2" )
+	Answer( name == "NO-MODERN-WARFARE" )
+	Answer( name == "ALT-HISTORY" )
+	Answer( name == "TACTICS" )
+then
+    Question question = new Question("SOLUTION", "Dust Tactics", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>WARGAME>MANY-PLAYERS>NO-NEW-WARGAMER>NO-ROMAN-LEGIONS>NO-XIX-CENTURY-BATTLE>NO-WW2>NO-MODERN-WARFARE>SCIENCE-FICTION"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NO-NEW-WARGAMER" )
+	Answer( name == "NO-ROMAN-LEGIONS" )
+	Answer( name == "NO-XIX-CENTURY-BATTLE" )
+	Answer( name == "NO-WW2" )
+	Answer( name == "NO-MODERN-WARFARE" )
+	Answer( name == "SCIENCE-FICTION" )
+then
+	Question question = new Question("SCIENCE-FICTION", "Space ships or giant robots?", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("SPACE-SHIPS", "Ships!"));
+	question.getAnswers().add(new Answer("ROBOTS", "Mechs!"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>WARGAME>MANY-PLAYERS>NO-NEW-WARGAMER>NO-ROMAN-LEGIONS>NO-XIX-CENTURY-BATTLE>NO-WW2>NO-MODERN-WARFARE>SCIENCE-FICTION>SPACE-SHIPS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NO-NEW-WARGAMER" )
+	Answer( name == "NO-ROMAN-LEGIONS" )
+	Answer( name == "NO-XIX-CENTURY-BATTLE" )
+	Answer( name == "NO-WW2" )
+	Answer( name == "NO-MODERN-WARFARE" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "SPACE-SHIPS" )
+then
+    Question question = new Question("SOLUTION", "Battleship Galaxies", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>WARGAME>MANY-PLAYERS>NO-NEW-WARGAMER>NO-ROMAN-LEGIONS>NO-XIX-CENTURY-BATTLE>NO-WW2>NO-MODERN-WARFARE>SCIENCE-FICTION>ROBOTS"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NO-NEW-WARGAMER" )
+	Answer( name == "NO-ROMAN-LEGIONS" )
+	Answer( name == "NO-XIX-CENTURY-BATTLE" )
+	Answer( name == "NO-WW2" )
+	Answer( name == "NO-MODERN-WARFARE" )
+	Answer( name == "SCIENCE-FICTION" )
+	Answer( name == "ROBOTS" )
+then
+    Question question = new Question("SOLUTION", "Battletech", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>WARGAME>MANY-PLAYERS>NO-NEW-WARGAMER>NO-ROMAN-LEGIONS>XIX-CENTURY-BATTLE"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "MANY-PLAYERS" )
+	Answer( name == "NO-NEW-WARGAMER" )
+	Answer( name == "NO-ROMAN-LEGIONS" )
+	Answer( name == "XIX-CENTURY-BATTLE" )
+then
+    Question question = new Question("SOLUTION", "1812: The Invasion of Canada", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-question>BUY-GAME>WARGAME>ONE-PLAYER"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "ONE-PLAYER" )
+then
+	Question question = new Question("ONE-PLAYER", "None", false, new ArrayList());
+
+	question.getAnswers().add(new Answer("HISTORIC", "Historic Battles"));
+	question.getAnswers().add(new Answer("AIR-SUPPORT", "Modern Air Support"));
+	question.getAnswers().add(new Answer("SCIENCE-FICTION", "Science Fiction"));
+
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>WARGAME>ONE-PLAYER>HISTORIC"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "ONE-PLAYER" )
+	Answer( name == "HISTORIC" )
+then
+    Question question = new Question("SOLUTION", "Field Commander Series ", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>WARGAME>ONE-PLAYER>AIR-SUPPORT"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "ONE-PLAYER" )
+	Answer( name == "AIR-SUPPORT" )
+then
+    Question question = new Question("SOLUTION", "Thunderbolt: Apache Leader ", false, new ArrayList());
+    insert(question);
+end
+
+
+rule "generate-solution>BUY-GAME>WARGAME>ONE-PLAYER>SCIENCE-FICTION"
+when
+	Answer( name == "BUY-GAME" )
+	Answer( name == "WARGAME" )
+	Answer( name == "ONE-PLAYER" )
+	Answer( name == "SCIENCE-FICTION" )
+then
+    Question question = new Question("SOLUTION", "Space Infantry", false, new ArrayList());
+    insert(question);
+end
+
