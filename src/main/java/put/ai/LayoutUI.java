@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 public class LayoutUI extends JFrame {
 	private static final long serialVersionUID = 1L;
+	private final String FONT_NAME = "Futura";
 	
 	// DROOLS
 	private KieServices ks;
@@ -23,6 +24,7 @@ public class LayoutUI extends JFrame {
 	private JPanel startPanel = new JPanel();
 	private JPanel contentPanel = new JPanel();
 	private JPanel endPanel = new JPanel();
+	private GridBagConstraints gbc = new GridBagConstraints();
 	
 	// Drools interactive
 	private JLabel solutionText = new JLabel("");
@@ -65,15 +67,28 @@ public class LayoutUI extends JFrame {
 	
 	private void initialize() {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setSize(1280, 720);
+		this.setSize(720, 480);
+		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		Container container = getContentPane();
 		container.setBackground(new Color(27,27,27));
 		this.setLayout(new BorderLayout());
 		
-		this.contentPanel.setBackground(getForeground());
+//		this.startPanel.setBackground(new Color(27,27,27));
+		this.startPanel.setLayout(new GridBagLayout());
+		
+//		this.contentPanel.setBackground(new Color(27,27,27));
 		this.contentPanel.setLayout(new BorderLayout());
-		this.endPanel.add(this.solutionText);
+		
+		this.endPanel.setLayout(new GridBagLayout());
+		JLabel solutionTextHeader = new JLabel("Solution found!");
+		solutionTextHeader.setFont(new Font(FONT_NAME, Font.PLAIN, 40));
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		this.endPanel.add(solutionTextHeader, gbc);
+		gbc.gridy = 1;
+		this.solutionText.setFont(new Font(FONT_NAME, Font.BOLD, 50));
+		this.endPanel.add(this.solutionText, gbc);
 		
 		this.cardLayout = new CardLayout();
 		this.cardPanel = new JPanel(cardLayout);
@@ -111,6 +126,7 @@ public class LayoutUI extends JFrame {
 	private void displayContentView() {
 		// Question
 		JPanel questionPanel = new JPanel();
+		this.currentQuestion.setFont(new Font(FONT_NAME, Font.PLAIN, 25));
 		questionPanel.add(this.currentQuestion);
 				
 		// Answers
