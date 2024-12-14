@@ -39,7 +39,7 @@ public class LayoutUI extends JFrame {
 	public void showQuestion(
 			Question question
 	) {
-		this.currentQuestion.setText(question.getQuestion());
+		this.currentQuestion.setText(question.getContent());
 		this.currentAnswers = question.getAnswers();
 		this.currentOptions = new ArrayList<JRadioButton>();
 		ButtonGroup buttonGroup = new ButtonGroup();
@@ -51,7 +51,7 @@ public class LayoutUI extends JFrame {
 		this.contentPanel.revalidate();
 		
 		for (Answer answer : question.getAnswers()) {
-			JRadioButton button = new JRadioButton(answer.getAnswer());
+			JRadioButton button = new JRadioButton(answer.getContent());
 			buttonGroup.add(button);
 			currentOptions.add(button);
 			answerPanel.add(button);
@@ -128,7 +128,7 @@ public class LayoutUI extends JFrame {
 			
 			Answer answer = currentAnswers
 					.stream()
-					.filter(ans -> selectedButton.getText().equals(ans.getAnswer()))
+					.filter(ans -> selectedButton.getText().equals(ans.getContent()))
 					.findAny()
 					.orElse(null);
 			

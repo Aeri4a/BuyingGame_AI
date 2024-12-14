@@ -4,18 +4,17 @@ import java.util.ArrayList;
 
 declare Answer
 	name : String
-	answer : String
+	content : String
 end
 
 declare Question
-	name : String
-	question : String
-    many : boolean
-	answers : ArrayList
+	name: String
+	content: String
+	answers: ArrayList
 end
 
 declare Solution
-	solution: String
+	content: String
 end
 
 rule "Init"
@@ -24,12 +23,20 @@ then
 	insert(new Answer("BUY-GAME", "I want to buy a game!"));
 end
 
-rule "update-gui"
+rule "show-question"
 when
-    q: Question( )
+	q: Question( )
+	gui: LayoutUI( )
+then
+    gui.showQuestion(q);
+end
+
+rule "show-solution"
+when
+    s: Solution( )
     gui: LayoutUI( )
 then
-    gui.changeState(q);
+    gui.showSolution(s.getContent());
 end
 
 
@@ -38,7 +45,7 @@ rule "generate-question>BUY-GAME"
 when
 	Answer( name == "BUY-GAME" )
 then
-	Question question = new Question("BUY-GAME", "What type of game are you looking for?", false, new ArrayList());
+	Question question = new Question("BUY-GAME", "What type of game are you looking for?", new ArrayList());
 
 	question.getAnswers().add(new Answer("PARTY", "I'm looking for a Filler or Party Game"));
 	question.getAnswers().add(new Answer("STRATEGY", "A Strategy Game"));
@@ -53,7 +60,7 @@ when
 	Answer( name == "BUY-GAME" )
 	Answer( name == "PARTY" )
 then
-	Question question = new Question("PARTY", "Are you playing with Geeks?", false, new ArrayList());
+	Question question = new Question("PARTY", "Are you playing with Geeks?", new ArrayList());
 
 	question.getAnswers().add(new Answer("GEEKS", "Yes"));
 	question.getAnswers().add(new Answer("NO-GEEKS", "No"));
@@ -68,7 +75,7 @@ when
 	Answer( name == "PARTY" )
 	Answer( name == "GEEKS" )
 then
-	Question question = new Question("GEEKS", "Rolling dice, or bluffing game?", false, new ArrayList());
+	Question question = new Question("GEEKS", "Rolling dice, or bluffing game?", new ArrayList());
 
 	question.getAnswers().add(new Answer("DICE", "Dice"));
 	question.getAnswers().add(new Answer("BLUFF", "Bluffing"));
@@ -84,7 +91,7 @@ when
 	Answer( name == "GEEKS" )
 	Answer( name == "DICE" )
 then
-	Question question = new Question("DICE", "Are you a zombie or a giant monster?", false, new ArrayList());
+	Question question = new Question("DICE", "Are you a zombie or a giant monster?", new ArrayList());
 
 	question.getAnswers().add(new Answer("PLAYER-ZOMBIE", "Braaaaaaains...."));
 	question.getAnswers().add(new Answer("PLAYER-GIANT-MONSTER", "I'm Godzilla!"));
@@ -101,8 +108,8 @@ when
 	Answer( name == "DICE" )
 	Answer( name == "PLAYER-ZOMBIE" )
 then
-    Question question = new Question("SOLUTION", "Zombie Dice", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Zombie Dice");
+    insert(solution);
 end
 
 
@@ -114,8 +121,8 @@ when
 	Answer( name == "DICE" )
 	Answer( name == "PLAYER-GIANT-MONSTER" )
 then
-    Question question = new Question("SOLUTION", "King of Tokyo", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("King of Tokyo");
+    insert(solution);
 end
 
 
@@ -126,7 +133,7 @@ when
 	Answer( name == "GEEKS" )
 	Answer( name == "BLUFF" )
 then
-	Question question = new Question("BLUFF", "Cooperative or Competitive?", false, new ArrayList());
+	Question question = new Question("BLUFF", "Cooperative or Competitive?", new ArrayList());
 
 	question.getAnswers().add(new Answer("COMPETITIVE", "Trust no one"));
 	question.getAnswers().add(new Answer("COOPERATIVE", "Let's play in teams"));
@@ -143,8 +150,8 @@ when
 	Answer( name == "BLUFF" )
 	Answer( name == "COMPETITIVE" )
 then
-    Question question = new Question("SOLUTION", "Coup", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Coup");
+    insert(solution);
 end
 
 
@@ -156,8 +163,8 @@ when
 	Answer( name == "BLUFF" )
 	Answer( name == "COOPERATIVE" )
 then
-    Question question = new Question("SOLUTION", "The Resistance", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("The Resistance");
+    insert(solution);
 end
 
 
@@ -167,7 +174,7 @@ when
 	Answer( name == "PARTY" )
 	Answer( name == "NO-GEEKS" )
 then
-	Question question = new Question("NO-GEEKS", "Do you like trivia?", false, new ArrayList());
+	Question question = new Question("NO-GEEKS", "Do you like trivia?", new ArrayList());
 
 	question.getAnswers().add(new Answer("TRIVIA", "Yes"));
 	question.getAnswers().add(new Answer("NO-TRIVIA", "No"));
@@ -183,8 +190,8 @@ when
 	Answer( name == "NO-GEEKS" )
 	Answer( name == "TRIVIA" )
 then
-    Question question = new Question("SOLUTION", "Wits & Wagers", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Wits & Wagers");
+    insert(solution);
 end
 
 
@@ -195,7 +202,7 @@ when
 	Answer( name == "NO-GEEKS" )
 	Answer( name == "NO-TRIVIA" )
 then
-	Question question = new Question("NO-TRIVIA", "How about something creative?", false, new ArrayList());
+	Question question = new Question("NO-TRIVIA", "How about something creative?", new ArrayList());
 
 	question.getAnswers().add(new Answer("CREATIVE", "Sure"));
 	question.getAnswers().add(new Answer("NO-CREATIVE", "Nope"));
@@ -212,7 +219,7 @@ when
 	Answer( name == "NO-TRIVIA" )
 	Answer( name == "CREATIVE" )
 then
-	Question question = new Question("CREATIVE", "Working with words or pictures?", false, new ArrayList());
+	Question question = new Question("CREATIVE", "Working with words or pictures?", new ArrayList());
 
 	question.getAnswers().add(new Answer("WORDS", "Words"));
 	question.getAnswers().add(new Answer("PICTURES", "Pictures"));
@@ -230,8 +237,8 @@ when
 	Answer( name == "CREATIVE" )
 	Answer( name == "WORDS" )
 then
-    Question question = new Question("SOLUTION", "Apples to Apples", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Apples to Apples");
+    insert(solution);
 end
 
 
@@ -244,8 +251,8 @@ when
 	Answer( name == "CREATIVE" )
 	Answer( name == "PICTURES" )
 then
-    Question question = new Question("SOLUTION", "Dixit", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Dixit");
+    insert(solution);
 end
 
 
@@ -257,7 +264,7 @@ when
 	Answer( name == "NO-TRIVIA" )
 	Answer( name == "NO-CREATIVE" )
 then
-	Question question = new Question("NO-CREATIVE", "How about a deduction game?", false, new ArrayList());
+	Question question = new Question("NO-CREATIVE", "How about a deduction game?", new ArrayList());
 
 	question.getAnswers().add(new Answer("DEDUCTION", "None"));
 
@@ -274,8 +281,8 @@ when
 	Answer( name == "NO-CREATIVE" )
 	Answer( name == "DEDUCTION" )
 then
-    Question question = new Question("SOLUTION", "Hanabi", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Hanabi");
+    insert(solution);
 end
 
 
@@ -284,7 +291,7 @@ when
 	Answer( name == "BUY-GAME" )
 	Answer( name == "STRATEGY" )
 then
-	Question question = new Question("STRATEGY", "Does theme matter to you?", false, new ArrayList());
+	Question question = new Question("STRATEGY", "Does theme matter to you?", new ArrayList());
 
 	question.getAnswers().add(new Answer("THEME", "Yes"));
 	question.getAnswers().add(new Answer("NO-THEME", "No"));
@@ -299,7 +306,7 @@ when
 	Answer( name == "STRATEGY" )
 	Answer( name == "THEME" )
 then
-	Question question = new Question("THEME", "What's your favorite theme?", false, new ArrayList());
+	Question question = new Question("THEME", "What's your favorite theme?", new ArrayList());
 
 	question.getAnswers().add(new Answer("CITY-BUILDING", "City Building"));
 	question.getAnswers().add(new Answer("FANTASY", "Fantasy"));
@@ -317,7 +324,7 @@ when
 	Answer( name == "THEME" )
 	Answer( name == "CITY-BUILDING" )
 then
-	Question question = new Question("CITY-BUILDING", "Do you enjoy tile placement?", false, new ArrayList());
+	Question question = new Question("CITY-BUILDING", "Do you enjoy tile placement?", new ArrayList());
 
 	question.getAnswers().add(new Answer("TILE-PLACEMENT", "Yes"));
 	question.getAnswers().add(new Answer("NO-TILE-PLACEMENT", "No"));
@@ -334,7 +341,7 @@ when
 	Answer( name == "CITY-BUILDING" )
 	Answer( name == "TILE-PLACEMENT" )
 then
-	Question question = new Question("TILE-PLACEMENT", "Are you willing to deal with elections?", false, new ArrayList());
+	Question question = new Question("TILE-PLACEMENT", "Are you willing to deal with elections?", new ArrayList());
 
 	question.getAnswers().add(new Answer("ELECTIONS", "It's the democratic way"));
 	question.getAnswers().add(new Answer("NO-ELECTIONS", "Nope, I just want to build"));
@@ -352,8 +359,8 @@ when
 	Answer( name == "TILE-PLACEMENT" )
 	Answer( name == "ELECTIONS" )
 then
-    Question question = new Question("SOLUTION", "Urban Sprawl", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Urban Sprawl");
+    insert(solution);
 end
 
 
@@ -366,8 +373,8 @@ when
 	Answer( name == "TILE-PLACEMENT" )
 	Answer( name == "NO-ELECTIONS" )
 then
-    Question question = new Question("SOLUTION", "Suburbia", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Suburbia");
+    insert(solution);
 end
 
 
@@ -379,7 +386,7 @@ when
 	Answer( name == "CITY-BUILDING" )
 	Answer( name == "NO-TILE-PLACEMENT" )
 then
-	Question question = new Question("NO-TILE-PLACEMENT", "Starting from scratch or urban renewal?", false, new ArrayList());
+	Question question = new Question("NO-TILE-PLACEMENT", "Starting from scratch or urban renewal?", new ArrayList());
 
 	question.getAnswers().add(new Answer("BUILDING-FROM-SCRATCH", "Let's build it up!"));
 	question.getAnswers().add(new Answer("URBAN-RENEWAL", "Let's clean the streets!"));
@@ -397,8 +404,8 @@ when
 	Answer( name == "NO-TILE-PLACEMENT" )
 	Answer( name == "BUILDING-FROM-SCRATCH" )
 then
-    Question question = new Question("SOLUTION", "Urbanization", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Urbanization");
+    insert(solution);
 end
 
 
@@ -411,8 +418,8 @@ when
 	Answer( name == "NO-TILE-PLACEMENT" )
 	Answer( name == "URBAN-RENEWAL" )
 then
-    Question question = new Question("SOLUTION", "Urbania", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Urbania");
+    insert(solution);
 end
 
 
@@ -423,7 +430,7 @@ when
 	Answer( name == "THEME" )
 	Answer( name == "FANTASY" )
 then
-	Question question = new Question("FANTASY", "Do you want dungeon crawling adventure?", false, new ArrayList());
+	Question question = new Question("FANTASY", "Do you want dungeon crawling adventure?", new ArrayList());
 
 	question.getAnswers().add(new Answer("DUNGEON-CRAWL", "Yes"));
 	question.getAnswers().add(new Answer("NO-DUNGEON-CRAWL", "No"));
@@ -440,7 +447,7 @@ when
 	Answer( name == "FANTASY" )
 	Answer( name == "DUNGEON-CRAWL" )
 then
-	Question question = new Question("DUNGEON-CRAWL", "A serious one?", false, new ArrayList());
+	Question question = new Question("DUNGEON-CRAWL", "A serious one?", new ArrayList());
 
 	question.getAnswers().add(new Answer("None", "No"));
 	question.getAnswers().add(new Answer("SERIOUS", "Yes"));
@@ -458,8 +465,8 @@ when
 	Answer( name == "DUNGEON-CRAWL" )
 	Answer( name == "None" )
 then
-    Question question = new Question("SOLUTION", "Munchkin", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Munchkin");
+    insert(solution);
 end
 
 
@@ -472,7 +479,7 @@ when
 	Answer( name == "DUNGEON-CRAWL" )
 	Answer( name == "SERIOUS" )
 then
-	Question question = new Question("SERIOUS", "How many players", false, new ArrayList());
+	Question question = new Question("SERIOUS", "How many players", new ArrayList());
 
 	question.getAnswers().add(new Answer("TWO-PLAYERS", "Just the two of us"));
 	question.getAnswers().add(new Answer("MANY-PLAYERS", "More than two"));
@@ -491,7 +498,7 @@ when
 	Answer( name == "SERIOUS" )
 	Answer( name == "TWO-PLAYERS" )
 then
-	Question question = new Question("TWO-PLAYERS", "Crush or out-maneuver your enemies?", false, new ArrayList());
+	Question question = new Question("TWO-PLAYERS", "Crush or out-maneuver your enemies?", new ArrayList());
 
 	question.getAnswers().add(new Answer("FIGHT-ENEMIES", "Fight"));
 	question.getAnswers().add(new Answer("OUT-MANEUVER-ENEMIES", "Maneuver"));
@@ -511,8 +518,8 @@ when
 	Answer( name == "TWO-PLAYERS" )
 	Answer( name == "FIGHT-ENEMIES" )
 then
-    Question question = new Question("SOLUTION", "Claustrophobia", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Claustrophobia");
+    insert(solution);
 end
 
 
@@ -527,8 +534,8 @@ when
 	Answer( name == "TWO-PLAYERS" )
 	Answer( name == "OUT-MANEUVER-ENEMIES" )
 then
-    Question question = new Question("SOLUTION", "Dungeon Twister 2: Prison", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Dungeon Twister 2: Prison");
+    insert(solution);
 end
 
 
@@ -542,7 +549,7 @@ when
 	Answer( name == "SERIOUS" )
 	Answer( name == "MANY-PLAYERS" )
 then
-	Question question = new Question("MANY-PLAYERS", "Cooperative or Competitive?", false, new ArrayList());
+	Question question = new Question("MANY-PLAYERS", "Cooperative or Competitive?", new ArrayList());
 
 	question.getAnswers().add(new Answer("COOPERATIVE", "Cooperative"));
 	question.getAnswers().add(new Answer("COMPETITIVE", "Competitive"));
@@ -562,7 +569,7 @@ when
 	Answer( name == "MANY-PLAYERS" )
 	Answer( name == "COOPERATIVE" )
 then
-	Question question = new Question("COOPERATIVE", "Playing with kids?", false, new ArrayList());
+	Question question = new Question("COOPERATIVE", "Playing with kids?", new ArrayList());
 
 	question.getAnswers().add(new Answer("KIDS", "Yes"));
 	question.getAnswers().add(new Answer("NO-KIDS", "No"));
@@ -583,8 +590,8 @@ when
 	Answer( name == "COOPERATIVE" )
 	Answer( name == "KIDS" )
 then
-    Question question = new Question("SOLUTION", "Mice & Mystics", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Mice & Mystics");
+    insert(solution);
 end
 
 
@@ -600,8 +607,8 @@ when
 	Answer( name == "COOPERATIVE" )
 	Answer( name == "NO-KIDS" )
 then
-    Question question = new Question("SOLUTION", "Dungeons and Dragons: Legend of Drizzt", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Dungeons and Dragons: Legend of Drizzt");
+    insert(solution);
 end
 
 
@@ -616,7 +623,7 @@ when
 	Answer( name == "MANY-PLAYERS" )
 	Answer( name == "COMPETITIVE" )
 then
-	Question question = new Question("COMPETITIVE", "Do you want a campaign?", false, new ArrayList());
+	Question question = new Question("COMPETITIVE", "Do you want a campaign?", new ArrayList());
 
 	question.getAnswers().add(new Answer("CAMPAIGN", "Yes"));
 	question.getAnswers().add(new Answer("NO-CAMPAIGN", "Just one game"));
@@ -637,8 +644,8 @@ when
 	Answer( name == "COMPETITIVE" )
 	Answer( name == "CAMPAIGN" )
 then
-    Question question = new Question("SOLUTION", "Descent: Journeys in the Dark 2nd Edition", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Descent: Journeys in the Dark 2nd Edition");
+    insert(solution);
 end
 
 
@@ -654,8 +661,8 @@ when
 	Answer( name == "COMPETITIVE" )
 	Answer( name == "NO-CAMPAIGN" )
 then
-    Question question = new Question("SOLUTION", "Dungeon Run", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Dungeon Run");
+    insert(solution);
 end
 
 
@@ -667,7 +674,7 @@ when
 	Answer( name == "FANTASY" )
 	Answer( name == "NO-DUNGEON-CRAWL" )
 then
-	Question question = new Question("NO-DUNGEON-CRAWL", "How about managing your own dungeon?", false, new ArrayList());
+	Question question = new Question("NO-DUNGEON-CRAWL", "How about managing your own dungeon?", new ArrayList());
 
 	question.getAnswers().add(new Answer("NO-MANAGING-DUNGEON", "No"));
 	question.getAnswers().add(new Answer("MANAGING-DUNGEON", "Yes"));
@@ -685,7 +692,7 @@ when
 	Answer( name == "NO-DUNGEON-CRAWL" )
 	Answer( name == "NO-MANAGING-DUNGEON" )
 then
-	Question question = new Question("NO-MANAGING-DUNGEON", "Want the whole questing thing, eh?", false, new ArrayList());
+	Question question = new Question("NO-MANAGING-DUNGEON", "Want the whole questing thing, eh?", new ArrayList());
 
 	question.getAnswers().add(new Answer("NO-QUESTING", "No"));
 	question.getAnswers().add(new Answer("QUESTING", "Yes"));
@@ -704,7 +711,7 @@ when
 	Answer( name == "NO-MANAGING-DUNGEON" )
 	Answer( name == "NO-QUESTING" )
 then
-	Question question = new Question("NO-QUESTING", "Do you like Deckbuilders?", false, new ArrayList());
+	Question question = new Question("NO-QUESTING", "Do you like Deckbuilders?", new ArrayList());
 
 	question.getAnswers().add(new Answer("DECKBUILDER", "Yes"));
 	question.getAnswers().add(new Answer("NO-DECKBUILDER", "No"));
@@ -724,7 +731,7 @@ when
 	Answer( name == "NO-QUESTING" )
 	Answer( name == "DECKBUILDER" )
 then
-	Question question = new Question("DECKBUILDER", "Competitive Deck Builders?", false, new ArrayList());
+	Question question = new Question("DECKBUILDER", "Competitive Deck Builders?", new ArrayList());
 
 	question.getAnswers().add(new Answer("COMPETITIVE", "Competitive"));
 	question.getAnswers().add(new Answer("COOPERATIVE", "Cooperative"));
@@ -745,8 +752,8 @@ when
 	Answer( name == "DECKBUILDER" )
 	Answer( name == "COMPETITIVE" )
 then
-    Question question = new Question("SOLUTION", "Thunderstone: Advance", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Thunderstone: Advance");
+    insert(solution);
 end
 
 
@@ -762,8 +769,8 @@ when
 	Answer( name == "DECKBUILDER" )
 	Answer( name == "COOPERATIVE" )
 then
-    Question question = new Question("SOLUTION", "Rune Age", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Rune Age");
+    insert(solution);
 end
 
 
@@ -778,7 +785,7 @@ when
 	Answer( name == "NO-QUESTING" )
 	Answer( name == "NO-DECKBUILDER" )
 then
-	Question question = new Question("NO-DECKBUILDER", "Lord of the Rings fan?", false, new ArrayList());
+	Question question = new Question("NO-DECKBUILDER", "Lord of the Rings fan?", new ArrayList());
 
 	question.getAnswers().add(new Answer("LOTR", "Yes"));
 	question.getAnswers().add(new Answer("NO-LOTR", "No"));
@@ -799,8 +806,8 @@ when
 	Answer( name == "NO-DECKBUILDER" )
 	Answer( name == "LOTR" )
 then
-    Question question = new Question("SOLUTION", "War of the Ring", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("War of the Ring");
+    insert(solution);
 end
 
 
@@ -816,7 +823,7 @@ when
 	Answer( name == "NO-DECKBUILDER" )
 	Answer( name == "NO-LOTR" )
 then
-	Question question = new Question("NO-LOTR", "How about castle defense?", false, new ArrayList());
+	Question question = new Question("NO-LOTR", "How about castle defense?", new ArrayList());
 
 	question.getAnswers().add(new Answer("CASTLE-DEFENSE", "Sounds fun!"));
 	question.getAnswers().add(new Answer("NO-CASTLE-DEFENSE", "Not for me"));
@@ -838,7 +845,7 @@ when
 	Answer( name == "NO-LOTR" )
 	Answer( name == "CASTLE-DEFENSE" )
 then
-	Question question = new Question("CASTLE-DEFENSE", "Cooperative or Competitive?", false, new ArrayList());
+	Question question = new Question("CASTLE-DEFENSE", "Cooperative or Competitive?", new ArrayList());
 
 	question.getAnswers().add(new Answer("COOPERATIVE", "Competitive"));
 	question.getAnswers().add(new Answer("COMPETITIVE", "Cooperative"));
@@ -861,8 +868,8 @@ when
 	Answer( name == "CASTLE-DEFENSE" )
 	Answer( name == "COOPERATIVE" )
 then
-    Question question = new Question("SOLUTION", "Dragon Rampage", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Dragon Rampage");
+    insert(solution);
 end
 
 
@@ -880,8 +887,8 @@ when
 	Answer( name == "CASTLE-DEFENSE" )
 	Answer( name == "COMPETITIVE" )
 then
-    Question question = new Question("SOLUTION", "Castle Panic", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Castle Panic");
+    insert(solution);
 end
 
 
@@ -898,7 +905,7 @@ when
 	Answer( name == "NO-LOTR" )
 	Answer( name == "NO-CASTLE-DEFENSE" )
 then
-	Question question = new Question("NO-CASTLE-DEFENSE", "Conquest in a fantasy world?", false, new ArrayList());
+	Question question = new Question("NO-CASTLE-DEFENSE", "Conquest in a fantasy world?", new ArrayList());
 
 	question.getAnswers().add(new Answer("FANTASY-CONQUEST", "Yes"));
 	question.getAnswers().add(new Answer("NO-FANTASY-CONQUEST", "No"));
@@ -921,7 +928,7 @@ when
 	Answer( name == "NO-CASTLE-DEFENSE" )
 	Answer( name == "FANTASY-CONQUEST" )
 then
-	Question question = new Question("FANTASY-CONQUEST", "Epic?", false, new ArrayList());
+	Question question = new Question("FANTASY-CONQUEST", "Epic?", new ArrayList());
 
 	question.getAnswers().add(new Answer("LONG", "Yes! It's gotta be big"));
 	question.getAnswers().add(new Answer("SHORT", "No, keep it quick"));
@@ -945,8 +952,8 @@ when
 	Answer( name == "FANTASY-CONQUEST" )
 	Answer( name == "LONG" )
 then
-    Question question = new Question("SOLUTION", "Runewars", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Runewars");
+    insert(solution);
 end
 
 
@@ -965,8 +972,8 @@ when
 	Answer( name == "FANTASY-CONQUEST" )
 	Answer( name == "SHORT" )
 then
-    Question question = new Question("SOLUTION", "Small World", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Small World");
+    insert(solution);
 end
 
 
@@ -984,7 +991,7 @@ when
 	Answer( name == "NO-CASTLE-DEFENSE" )
 	Answer( name == "NO-FANTASY-CONQUEST" )
 then
-	Question question = new Question("NO-FANTASY-CONQUEST", "Everyday life, eh?", false, new ArrayList());
+	Question question = new Question("NO-FANTASY-CONQUEST", "Everyday life, eh?", new ArrayList());
 
 	question.getAnswers().add(new Answer("BUSINESS", "Running a business"));
 	question.getAnswers().add(new Answer("RELAX", "Relaxing after work"));
@@ -1009,8 +1016,8 @@ when
 	Answer( name == "NO-FANTASY-CONQUEST" )
 	Answer( name == "BUSINESS" )
 then
-    Question question = new Question("SOLUTION", "Dungeon Petz", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Dungeon Petz");
+    insert(solution);
 end
 
 
@@ -1029,8 +1036,8 @@ when
 	Answer( name == "NO-FANTASY-CONQUEST" )
 	Answer( name == "RELAX" )
 then
-    Question question = new Question("SOLUTION", "Red Dragon Inn", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Red Dragon Inn");
+    insert(solution);
 end
 
 
@@ -1049,8 +1056,8 @@ when
 	Answer( name == "NO-FANTASY-CONQUEST" )
 	Answer( name == "FIGHT-BUSINESS-RIVALS" )
 then
-    Question question = new Question("SOLUTION", "Mage Wars", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Mage Wars");
+    insert(solution);
 end
 
 
@@ -1064,7 +1071,7 @@ when
 	Answer( name == "NO-MANAGING-DUNGEON" )
 	Answer( name == "QUESTING" )
 then
-	Question question = new Question("QUESTING", "Competitive or Cooperative?", false, new ArrayList());
+	Question question = new Question("QUESTING", "Competitive or Cooperative?", new ArrayList());
 
 	question.getAnswers().add(new Answer("COMPETITIVE", "Competitive"));
 	question.getAnswers().add(new Answer("BACKSTAB", "Cooperative - if I can backstab"));
@@ -1085,7 +1092,7 @@ when
 	Answer( name == "QUESTING" )
 	Answer( name == "COMPETITIVE" )
 then
-	Question question = new Question("COMPETITIVE", "Mind getting trounced by random events?", false, new ArrayList());
+	Question question = new Question("COMPETITIVE", "Mind getting trounced by random events?", new ArrayList());
 
 	question.getAnswers().add(new Answer("NO-RANDOM", "Yes, Strategy matters"));
 	question.getAnswers().add(new Answer("RANDOM", "No, it's the experience that counts"));
@@ -1106,8 +1113,8 @@ when
 	Answer( name == "COMPETITIVE" )
 	Answer( name == "NO-RANDOM" )
 then
-    Question question = new Question("SOLUTION", "Mage Knight", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Mage Knight");
+    insert(solution);
 end
 
 
@@ -1123,7 +1130,7 @@ when
 	Answer( name == "COMPETITIVE" )
 	Answer( name == "RANDOM" )
 then
-	Question question = new Question("RANDOM", "Is storytelling important?", false, new ArrayList());
+	Question question = new Question("RANDOM", "Is storytelling important?", new ArrayList());
 
 	question.getAnswers().add(new Answer("STORY-TELLING", "Yes"));
 	question.getAnswers().add(new Answer("NO-STORY-TELLING", "Not as much as combat!"));
@@ -1145,8 +1152,8 @@ when
 	Answer( name == "RANDOM" )
 	Answer( name == "STORY-TELLING" )
 then
-    Question question = new Question("SOLUTION", "Tales of the Arabian Nights", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Tales of the Arabian Nights");
+    insert(solution);
 end
 
 
@@ -1163,8 +1170,8 @@ when
 	Answer( name == "RANDOM" )
 	Answer( name == "NO-STORY-TELLING" )
 then
-    Question question = new Question("SOLUTION", "Talisman", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Talisman");
+    insert(solution);
 end
 
 
@@ -1179,8 +1186,8 @@ when
 	Answer( name == "QUESTING" )
 	Answer( name == "BACKSTAB" )
 then
-    Question question = new Question("SOLUTION", "Shadows Over Camelot", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Shadows Over Camelot");
+    insert(solution);
 end
 
 
@@ -1195,7 +1202,7 @@ when
 	Answer( name == "QUESTING" )
 	Answer( name == "COOPERATIVE" )
 then
-	Question question = new Question("COOPERATIVE", "Board game or card game?", false, new ArrayList());
+	Question question = new Question("COOPERATIVE", "Board game or card game?", new ArrayList());
 
 	question.getAnswers().add(new Answer("BOARD", "Boards"));
 	question.getAnswers().add(new Answer("CARDS", "Cards"));
@@ -1216,8 +1223,8 @@ when
 	Answer( name == "COOPERATIVE" )
 	Answer( name == "BOARD" )
 then
-    Question question = new Question("SOLUTION", "Defenders of the realm", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Defenders of the realm");
+    insert(solution);
 end
 
 
@@ -1233,8 +1240,8 @@ when
 	Answer( name == "COOPERATIVE" )
 	Answer( name == "CARDS" )
 then
-    Question question = new Question("SOLUTION", "Lord if the Rings Living Card Game", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Lord if the Rings Living Card Game");
+    insert(solution);
 end
 
 
@@ -1247,8 +1254,8 @@ when
 	Answer( name == "NO-DUNGEON-CRAWL" )
 	Answer( name == "MANAGING-DUNGEON" )
 then
-    Question question = new Question("SOLUTION", "Dungeon Lords", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Dungeon Lords");
+    insert(solution);
 end
 
 
@@ -1259,7 +1266,7 @@ when
 	Answer( name == "THEME" )
 	Answer( name == "HORROR" )
 then
-	Question question = new Question("HORROR", "What's your favourite monster?", false, new ArrayList());
+	Question question = new Question("HORROR", "What's your favourite monster?", new ArrayList());
 
 	question.getAnswers().add(new Answer("ZOMBIES", "Zombies"));
 	question.getAnswers().add(new Answer("CTHULHU", "Cthulhu"));
@@ -1277,7 +1284,7 @@ when
 	Answer( name == "HORROR" )
 	Answer( name == "ZOMBIES" )
 then
-	Question question = new Question("ZOMBIES", "Boards or Cards?", false, new ArrayList());
+	Question question = new Question("ZOMBIES", "Boards or Cards?", new ArrayList());
 
 	question.getAnswers().add(new Answer("BOARD", "Board Game"));
 	question.getAnswers().add(new Answer("CARDS", "Card Game"));
@@ -1295,7 +1302,7 @@ when
 	Answer( name == "ZOMBIES" )
 	Answer( name == "BOARD" )
 then
-	Question question = new Question("BOARD", "Survival of the Fittest or Zombies vs Humans", false, new ArrayList());
+	Question question = new Question("BOARD", "Survival of the Fittest or Zombies vs Humans", new ArrayList());
 
 	question.getAnswers().add(new Answer("FITTEST-SURVIVAL", "Survival of the Fittest"));
 	question.getAnswers().add(new Answer("ZOMBIES-VS-HUMANS", "Zombies vs. Humans"));
@@ -1314,8 +1321,8 @@ when
 	Answer( name == "BOARD" )
 	Answer( name == "FITTEST-SURVIVAL" )
 then
-    Question question = new Question("SOLUTION", "City of Horror", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("City of Horror");
+    insert(solution);
 end
 
 
@@ -1329,7 +1336,7 @@ when
 	Answer( name == "BOARD" )
 	Answer( name == "ZOMBIES-VS-HUMANS" )
 then
-	Question question = new Question("ZOMBIES-VS-HUMANS", "Does anyone want to play as the zombies?", false, new ArrayList());
+	Question question = new Question("ZOMBIES-VS-HUMANS", "Does anyone want to play as the zombies?", new ArrayList());
 
 	question.getAnswers().add(new Answer("ALL-HUMANS", "We're all humans here"));
 	question.getAnswers().add(new Answer("PLAYER-ZOMBIE", "Sure! Braaaains..."));
@@ -1349,8 +1356,8 @@ when
 	Answer( name == "ZOMBIES-VS-HUMANS" )
 	Answer( name == "ALL-HUMANS" )
 then
-    Question question = new Question("SOLUTION", "Zombicide", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Zombicide");
+    insert(solution);
 end
 
 
@@ -1365,8 +1372,8 @@ when
 	Answer( name == "ZOMBIES-VS-HUMANS" )
 	Answer( name == "PLAYER-ZOMBIE" )
 then
-    Question question = new Question("SOLUTION", "Last Night on Earth", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Last Night on Earth");
+    insert(solution);
 end
 
 
@@ -1379,8 +1386,8 @@ when
 	Answer( name == "ZOMBIES" )
 	Answer( name == "CARDS" )
 then
-    Question question = new Question("SOLUTION", "Resident Evil Deckbuilding Game", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Resident Evil Deckbuilding Game");
+    insert(solution);
 end
 
 
@@ -1392,7 +1399,7 @@ when
 	Answer( name == "HORROR" )
 	Answer( name == "CTHULHU" )
 then
-	Question question = new Question("CTHULHU", "Ever wanted to play on his side?", false, new ArrayList());
+	Question question = new Question("CTHULHU", "Ever wanted to play on his side?", new ArrayList());
 
 	question.getAnswers().add(new Answer("SIDE-WITH-ELDER-GOD", "Well, maybe a little..."));
 	question.getAnswers().add(new Answer("NO-SIDE-WITH-ELDER-GOD", "Side with Elder Gods? No! Humanity stands together"));
@@ -1410,8 +1417,8 @@ when
 	Answer( name == "CTHULHU" )
 	Answer( name == "SIDE-WITH-ELDER-GOD" )
 then
-    Question question = new Question("SOLUTION", "Mansions of Madness", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Mansions of Madness");
+    insert(solution);
 end
 
 
@@ -1424,7 +1431,7 @@ when
 	Answer( name == "CTHULHU" )
 	Answer( name == "NO-SIDE-WITH-ELDER-GOD" )
 then
-	Question question = new Question("NO-SIDE-WITH-ELDER-GOD", "An epic investigation or a gateway game?", false, new ArrayList());
+	Question question = new Question("NO-SIDE-WITH-ELDER-GOD", "An epic investigation or a gateway game?", new ArrayList());
 
 	question.getAnswers().add(new Answer("EPIC-INVESTIGATION", "I want an epic!"));
 	question.getAnswers().add(new Answer("GATEWAY-GAME", "Gateway, please"));
@@ -1443,8 +1450,8 @@ when
 	Answer( name == "NO-SIDE-WITH-ELDER-GOD" )
 	Answer( name == "EPIC-INVESTIGATION" )
 then
-    Question question = new Question("SOLUTION", "Arkham Horror", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Arkham Horror");
+    insert(solution);
 end
 
 
@@ -1458,8 +1465,8 @@ when
 	Answer( name == "NO-SIDE-WITH-ELDER-GOD" )
 	Answer( name == "GATEWAY-GAME" )
 then
-    Question question = new Question("SOLUTION", "Elder Sign", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Elder Sign");
+    insert(solution);
 end
 
 
@@ -1471,7 +1478,7 @@ when
 	Answer( name == "HORROR" )
 	Answer( name == "CLASSIC-MOVIE-MONSTERS" )
 then
-	Question question = new Question("CLASSIC-MOVIE-MONSTERS", "Card-based combat or a mystery?", false, new ArrayList());
+	Question question = new Question("CLASSIC-MOVIE-MONSTERS", "Card-based combat or a mystery?", new ArrayList());
 
 	question.getAnswers().add(new Answer("COMBAT", "I'll crush you!"));
 	question.getAnswers().add(new Answer("MYSTERY", "I'd rather be a detective"));
@@ -1489,8 +1496,8 @@ when
 	Answer( name == "CLASSIC-MOVIE-MONSTERS" )
 	Answer( name == "COMBAT" )
 then
-    Question question = new Question("SOLUTION", "Nightfall", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Nightfall");
+    insert(solution);
 end
 
 
@@ -1503,8 +1510,8 @@ when
 	Answer( name == "CLASSIC-MOVIE-MONSTERS" )
 	Answer( name == "MYSTERY" )
 then
-    Question question = new Question("SOLUTION", "Betrayal at House on the Hill", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Betrayal at House on the Hill");
+    insert(solution);
 end
 
 
@@ -1515,7 +1522,7 @@ when
 	Answer( name == "THEME" )
 	Answer( name == "SCIENCE-FICTION" )
 then
-	Question question = new Question("SCIENCE-FICTION", "Star Wars fan?", false, new ArrayList());
+	Question question = new Question("SCIENCE-FICTION", "Star Wars fan?", new ArrayList());
 
 	question.getAnswers().add(new Answer("NO-STAR-WARS", "No"));
 	question.getAnswers().add(new Answer("STAR-WARS", "Yes"));
@@ -1532,7 +1539,7 @@ when
 	Answer( name == "SCIENCE-FICTION" )
 	Answer( name == "NO-STAR-WARS" )
 then
-	Question question = new Question("NO-STAR-WARS", "Star Trek, then?", false, new ArrayList());
+	Question question = new Question("NO-STAR-WARS", "Star Trek, then?", new ArrayList());
 
 	question.getAnswers().add(new Answer("STAR-TREK", "Yes"));
 	question.getAnswers().add(new Answer("NO-STAR-TREK", "No"));
@@ -1550,7 +1557,7 @@ when
 	Answer( name == "NO-STAR-WARS" )
 	Answer( name == "STAR-TREK" )
 then
-	Question question = new Question("STAR-TREK", "One-on-one or working together?", false, new ArrayList());
+	Question question = new Question("STAR-TREK", "One-on-one or working together?", new ArrayList());
 
 	question.getAnswers().add(new Answer("COMPETITIVE", "Competitive"));
 	question.getAnswers().add(new Answer("COOPERATIVE", "Cooperative"));
@@ -1569,8 +1576,8 @@ when
 	Answer( name == "STAR-TREK" )
 	Answer( name == "COMPETITIVE" )
 then
-    Question question = new Question("SOLUTION", "Star Trek: Fleet Captains", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Star Trek: Fleet Captains");
+    insert(solution);
 end
 
 
@@ -1584,8 +1591,8 @@ when
 	Answer( name == "STAR-TREK" )
 	Answer( name == "COOPERATIVE" )
 then
-    Question question = new Question("SOLUTION", "Star Trek Expeditions", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Star Trek Expeditions");
+    insert(solution);
 end
 
 
@@ -1598,7 +1605,7 @@ when
 	Answer( name == "NO-STAR-WARS" )
 	Answer( name == "NO-STAR-TREK" )
 then
-	Question question = new Question("NO-STAR-TREK", "Battlestar Galactica?", false, new ArrayList());
+	Question question = new Question("NO-STAR-TREK", "Battlestar Galactica?", new ArrayList());
 
 	question.getAnswers().add(new Answer("BATTLE-STAR-GALACTICA", "Yes"));
 	question.getAnswers().add(new Answer("NO-BATTLE-STAR-GALACTICA", "No"));
@@ -1617,8 +1624,8 @@ when
 	Answer( name == "NO-STAR-TREK" )
 	Answer( name == "BATTLE-STAR-GALACTICA" )
 then
-    Question question = new Question("SOLUTION", "Battlestar Galactica: the Board Game", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Battlestar Galactica: the Board Game");
+    insert(solution);
 end
 
 
@@ -1632,7 +1639,7 @@ when
 	Answer( name == "NO-STAR-TREK" )
 	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
 then
-	Question question = new Question("NO-BATTLE-STAR-GALACTICA", "Explore, Expand, Exploit, Exterminate?", false, new ArrayList());
+	Question question = new Question("NO-BATTLE-STAR-GALACTICA", "Explore, Expand, Exploit, Exterminate?", new ArrayList());
 
 	question.getAnswers().add(new Answer("EXPLORE-EXPAND-EXPLOIT-EXTERMINATE", "Of course!"));
 	question.getAnswers().add(new Answer("NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE", "That's not right!"));
@@ -1652,7 +1659,7 @@ when
 	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
 	Answer( name == "EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
 then
-	Question question = new Question("EXPLORE-EXPAND-EXPLOIT-EXTERMINATE", "So, just how epic are we getting?", false, new ArrayList());
+	Question question = new Question("EXPLORE-EXPAND-EXPLOIT-EXTERMINATE", "So, just how epic are we getting?", new ArrayList());
 
 	question.getAnswers().add(new Answer("LONG", "We've got all day"));
 	question.getAnswers().add(new Answer("SHORT", "It is a work night..."));
@@ -1673,8 +1680,8 @@ when
 	Answer( name == "EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
 	Answer( name == "LONG" )
 then
-    Question question = new Question("SOLUTION", "Twilight Imperium: 3rd Edition", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Twilight Imperium: 3rd Edition");
+    insert(solution);
 end
 
 
@@ -1690,8 +1697,8 @@ when
 	Answer( name == "EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
 	Answer( name == "SHORT" )
 then
-    Question question = new Question("SOLUTION", "Eclipse", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Eclipse");
+    insert(solution);
 end
 
 
@@ -1706,7 +1713,7 @@ when
 	Answer( name == "NO-BATTLE-STAR-GALACTICA" )
 	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
 then
-	Question question = new Question("NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE", "How about being an alien race?", false, new ArrayList());
+	Question question = new Question("NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE", "How about being an alien race?", new ArrayList());
 
 	question.getAnswers().add(new Answer("NO-PLAYER-ALIEN", "Maybe not"));
 	question.getAnswers().add(new Answer("PLAYER-ALIEN", "That sounds fun"));
@@ -1727,7 +1734,7 @@ when
 	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
 	Answer( name == "NO-PLAYER-ALIEN" )
 then
-	Question question = new Question("NO-PLAYER-ALIEN", "How about a card game?", false, new ArrayList());
+	Question question = new Question("NO-PLAYER-ALIEN", "How about a card game?", new ArrayList());
 
 	question.getAnswers().add(new Answer("CARDS", "Sure, that works"));
 	question.getAnswers().add(new Answer("BOARD", "I like my boards"));
@@ -1749,7 +1756,7 @@ when
 	Answer( name == "NO-PLAYER-ALIEN" )
 	Answer( name == "CARDS" )
 then
-	Question question = new Question("CARDS", "A Deck Builder?", false, new ArrayList());
+	Question question = new Question("CARDS", "A Deck Builder?", new ArrayList());
 
 	question.getAnswers().add(new Answer("DECK-BUILDER", "Yes"));
 	question.getAnswers().add(new Answer("NO-DECK-BUILDER", "No"));
@@ -1772,8 +1779,8 @@ when
 	Answer( name == "CARDS" )
 	Answer( name == "DECK-BUILDER" )
 then
-    Question question = new Question("SOLUTION", "Core Worlds", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Core Worlds");
+    insert(solution);
 end
 
 
@@ -1791,7 +1798,7 @@ when
 	Answer( name == "CARDS" )
 	Answer( name == "NO-DECK-BUILDER" )
 then
-	Question question = new Question("NO-DECK-BUILDER", "A Living Card Game?", false, new ArrayList());
+	Question question = new Question("NO-DECK-BUILDER", "A Living Card Game?", new ArrayList());
 
 	question.getAnswers().add(new Answer("LIVING-CARD", "Yes"));
 	question.getAnswers().add(new Answer("NO-LIVING-CARD", "No"));
@@ -1815,8 +1822,8 @@ when
 	Answer( name == "NO-DECK-BUILDER" )
 	Answer( name == "LIVING-CARD" )
 then
-    Question question = new Question("SOLUTION", "Android: Netrunner", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Android: Netrunner");
+    insert(solution);
 end
 
 
@@ -1835,8 +1842,8 @@ when
 	Answer( name == "NO-DECK-BUILDER" )
 	Answer( name == "NO-LIVING-CARD" )
 then
-    Question question = new Question("SOLUTION", "Race for the Galaxy", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Race for the Galaxy");
+    insert(solution);
 end
 
 
@@ -1853,7 +1860,7 @@ when
 	Answer( name == "NO-PLAYER-ALIEN" )
 	Answer( name == "BOARD" )
 then
-	Question question = new Question("BOARD", "If not an alien, I'll be a...", false, new ArrayList());
+	Question question = new Question("BOARD", "If not an alien, I'll be a...", new ArrayList());
 
 	question.getAnswers().add(new Answer("ATHLETE", "Athlete"));
 	question.getAnswers().add(new Answer("GALACTIC-CORPORATION", "Galactic Corporation"));
@@ -1878,8 +1885,8 @@ when
 	Answer( name == "BOARD" )
 	Answer( name == "ATHLETE" )
 then
-    Question question = new Question("SOLUTION", "Dreadball: The Futuristic Sport Game", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Dreadball: The Futuristic Sport Game");
+    insert(solution);
 end
 
 
@@ -1897,8 +1904,8 @@ when
 	Answer( name == "BOARD" )
 	Answer( name == "GALACTIC-CORPORATION" )
 then
-    Question question = new Question("SOLUTION", "Phantom League", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Phantom League");
+    insert(solution);
 end
 
 
@@ -1916,7 +1923,7 @@ when
 	Answer( name == "BOARD" )
 	Answer( name == "SPACE-CREW-ON-MISSION" )
 then
-	Question question = new Question("SPACE-CREW-ON-MISSION", "How will you succeed?", false, new ArrayList());
+	Question question = new Question("SPACE-CREW-ON-MISSION", "How will you succeed?", new ArrayList());
 
 	question.getAnswers().add(new Answer("FAST-PLANNING", "Teamwork and high-speed planning"));
 	question.getAnswers().add(new Answer("DEXTERITY", "Teamwork and dexterity"));
@@ -1940,8 +1947,8 @@ when
 	Answer( name == "SPACE-CREW-ON-MISSION" )
 	Answer( name == "FAST-PLANNING" )
 then
-    Question question = new Question("SOLUTION", "Space Alert", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Space Alert");
+    insert(solution);
 end
 
 
@@ -1960,8 +1967,8 @@ when
 	Answer( name == "SPACE-CREW-ON-MISSION" )
 	Answer( name == "DEXTERITY" )
 then
-    Question question = new Question("SOLUTION", "Space Cadets", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Space Cadets");
+    insert(solution);
 end
 
 
@@ -1979,7 +1986,7 @@ when
 	Answer( name == "BOARD" )
 	Answer( name == "MERCHANT" )
 then
-	Question question = new Question("MERCHANT", "Seriously?", false, new ArrayList());
+	Question question = new Question("MERCHANT", "Seriously?", new ArrayList());
 
 	question.getAnswers().add(new Answer("SERIOUS", "It's serious business"));
 	question.getAnswers().add(new Answer("NO-SERIOUS", "Nah, we just want a giggle"));
@@ -2003,8 +2010,8 @@ when
 	Answer( name == "MERCHANT" )
 	Answer( name == "SERIOUS" )
 then
-    Question question = new Question("SOLUTION", "Merchant of Venus", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Merchant of Venus");
+    insert(solution);
 end
 
 
@@ -2023,8 +2030,8 @@ when
 	Answer( name == "MERCHANT" )
 	Answer( name == "NO-SERIOUS" )
 then
-    Question question = new Question("SOLUTION", "Galaxy Trucker", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Galaxy Trucker");
+    insert(solution);
 end
 
 
@@ -2040,7 +2047,7 @@ when
 	Answer( name == "NO-EXPLORE-EXPAND-EXPLOIT-EXTERMINATE" )
 	Answer( name == "PLAYER-ALIEN" )
 then
-	Question question = new Question("PLAYER-ALIEN", "Doing battle...", false, new ArrayList());
+	Question question = new Question("PLAYER-ALIEN", "Doing battle...", new ArrayList());
 
 	question.getAnswers().add(new Answer("FIGHT-IN-SPACE", "In Space"));
 	question.getAnswers().add(new Answer("FIGHT-FOR-GALACTIC-CENTRE", "For the Galactic Centre"));
@@ -2063,8 +2070,8 @@ when
 	Answer( name == "PLAYER-ALIEN" )
 	Answer( name == "FIGHT-IN-SPACE" )
 then
-    Question question = new Question("SOLUTION", "Cosmic Encounter", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Cosmic Encounter");
+    insert(solution);
 end
 
 
@@ -2081,8 +2088,8 @@ when
 	Answer( name == "PLAYER-ALIEN" )
 	Answer( name == "FIGHT-FOR-GALACTIC-CENTRE" )
 then
-    Question question = new Question("SOLUTION", "Rex: Final Days of an Empire", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Rex: Final Days of an Empire");
+    insert(solution);
 end
 
 
@@ -2099,8 +2106,8 @@ when
 	Answer( name == "PLAYER-ALIEN" )
 	Answer( name == "FIGHT-FOR-EARTH" )
 then
-    Question question = new Question("SOLUTION", "Conquest of Planet Earth", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Conquest of Planet Earth");
+    insert(solution);
 end
 
 
@@ -2112,7 +2119,7 @@ when
 	Answer( name == "SCIENCE-FICTION" )
 	Answer( name == "STAR-WARS" )
 then
-	Question question = new Question("STAR-WARS", "Grand adventure or tactical space combat?", false, new ArrayList());
+	Question question = new Question("STAR-WARS", "Grand adventure or tactical space combat?", new ArrayList());
 
 	question.getAnswers().add(new Answer("ADVENTURE", "Adventure"));
 	question.getAnswers().add(new Answer("COMBAT", "Pew! Pew!"));
@@ -2130,8 +2137,8 @@ when
 	Answer( name == "STAR-WARS" )
 	Answer( name == "ADVENTURE" )
 then
-    Question question = new Question("SOLUTION", "Star Wars Living Card Game", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Star Wars Living Card Game");
+    insert(solution);
 end
 
 
@@ -2144,8 +2151,8 @@ when
 	Answer( name == "STAR-WARS" )
 	Answer( name == "COMBAT" )
 then
-    Question question = new Question("SOLUTION", "Star Wars: X-WingStar Wars Living Miniature Game", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Star Wars: X-WingStar Wars Living Miniature Game");
+    insert(solution);
 end
 
 
@@ -2155,7 +2162,7 @@ when
 	Answer( name == "STRATEGY" )
 	Answer( name == "NO-THEME" )
 then
-	Question question = new Question("NO-THEME", "What's most important to you?", false, new ArrayList());
+	Question question = new Question("NO-THEME", "What's most important to you?", new ArrayList());
 
 	question.getAnswers().add(new Answer("MECHANICS", "Give me good mechanics over theme"));
 	question.getAnswers().add(new Answer("NON-GAMERS", "I'm playing with Non-Gamers"));
@@ -2171,7 +2178,7 @@ when
 	Answer( name == "NO-THEME" )
 	Answer( name == "MECHANICS" )
 then
-	Question question = new Question("MECHANICS", "Do you want a route- or network building game?", false, new ArrayList());
+	Question question = new Question("MECHANICS", "Do you want a route- or network building game?", new ArrayList());
 
 	question.getAnswers().add(new Answer("NO-ROUTE-OR-NETWORK-BUILDING", "Not really"));
 	question.getAnswers().add(new Answer("ROUTE-OR-NETWORK-BUILDING", "Trains & infrastructure? Sure!"));
@@ -2188,7 +2195,7 @@ when
 	Answer( name == "MECHANICS" )
 	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
 then
-	Question question = new Question("NO-ROUTE-OR-NETWORK-BUILDING", "Civilization building, then?", false, new ArrayList());
+	Question question = new Question("NO-ROUTE-OR-NETWORK-BUILDING", "Civilization building, then?", new ArrayList());
 
 	question.getAnswers().add(new Answer("CIVILIZATION-BUILDING", "Yes"));
 	question.getAnswers().add(new Answer("NO-CIVILIZATION-BUILDING", "No"));
@@ -2206,7 +2213,7 @@ when
 	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
 	Answer( name == "CIVILIZATION-BUILDING" )
 then
-	Question question = new Question("CIVILIZATION-BUILDING", "Do you want to play with technology trees?", false, new ArrayList());
+	Question question = new Question("CIVILIZATION-BUILDING", "Do you want to play with technology trees?", new ArrayList());
 
 	question.getAnswers().add(new Answer("TECHNOLOGY-TREES", "Yes"));
 	question.getAnswers().add(new Answer("NO-TECHNOLOGY-TREES", "No"));
@@ -2225,7 +2232,7 @@ when
 	Answer( name == "CIVILIZATION-BUILDING" )
 	Answer( name == "TECHNOLOGY-TREES" )
 then
-	Question question = new Question("TECHNOLOGY-TREES", "How complex?", false, new ArrayList());
+	Question question = new Question("TECHNOLOGY-TREES", "How complex?", new ArrayList());
 
 	question.getAnswers().add(new Answer("HARD", "Pretty Complex"));
 	question.getAnswers().add(new Answer("SIMPLE", "Let's keep it simpler"));
@@ -2245,7 +2252,7 @@ when
 	Answer( name == "TECHNOLOGY-TREES" )
 	Answer( name == "HARD" )
 then
-	Question question = new Question("HARD", " Want to see your world on a map?", false, new ArrayList());
+	Question question = new Question("HARD", " Want to see your world on a map?", new ArrayList());
 
 	question.getAnswers().add(new Answer("MAP", "Yes"));
 	question.getAnswers().add(new Answer("NO-MAP", "No"));
@@ -2266,8 +2273,8 @@ when
 	Answer( name == "HARD" )
 	Answer( name == "MAP" )
 then
-    Question question = new Question("SOLUTION", "Sid Meier's Civilization: The Board Game", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Sid Meier's Civilization: The Board Game");
+    insert(solution);
 end
 
 
@@ -2283,8 +2290,8 @@ when
 	Answer( name == "HARD" )
 	Answer( name == "NO-MAP" )
 then
-    Question question = new Question("SOLUTION", "Through the Ages: A Story of Civilization ", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Through the Ages: A Story of Civilization ");
+    insert(solution);
 end
 
 
@@ -2299,8 +2306,8 @@ when
 	Answer( name == "TECHNOLOGY-TREES" )
 	Answer( name == "SIMPLE" )
 then
-    Question question = new Question("SOLUTION", "Clash of Cultures", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Clash of Cultures");
+    insert(solution);
 end
 
 
@@ -2314,8 +2321,8 @@ when
 	Answer( name == "CIVILIZATION-BUILDING" )
 	Answer( name == "NO-TECHNOLOGY-TREES" )
 then
-    Question question = new Question("SOLUTION", "7 Wonders", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("7 Wonders");
+    insert(solution);
 end
 
 
@@ -2328,7 +2335,7 @@ when
 	Answer( name == "NO-ROUTE-OR-NETWORK-BUILDING" )
 	Answer( name == "NO-CIVILIZATION-BUILDING" )
 then
-	Question question = new Question("NO-CIVILIZATION-BUILDING", "A cooperative game?", false, new ArrayList());
+	Question question = new Question("NO-CIVILIZATION-BUILDING", "A cooperative game?", new ArrayList());
 
 	question.getAnswers().add(new Answer("COMPETITIVE", "Everybody's on their own"));
 	question.getAnswers().add(new Answer("COOPERATIVE", "Yes, completely"));
@@ -2347,7 +2354,7 @@ when
 	Answer( name == "NO-CIVILIZATION-BUILDING" )
 	Answer( name == "COMPETITIVE" )
 then
-	Question question = new Question("COMPETITIVE", "More than 2 players?", false, new ArrayList());
+	Question question = new Question("COMPETITIVE", "More than 2 players?", new ArrayList());
 
 	question.getAnswers().add(new Answer("TWO-PLAYERS", "No"));
 	question.getAnswers().add(new Answer("MANY-PLAYERS", "Yes"));
@@ -2367,7 +2374,7 @@ when
 	Answer( name == "COMPETITIVE" )
 	Answer( name == "TWO-PLAYERS" )
 then
-	Question question = new Question("TWO-PLAYERS", "How long do you have?", false, new ArrayList());
+	Question question = new Question("TWO-PLAYERS", "How long do you have?", new ArrayList());
 
 	question.getAnswers().add(new Answer("SHORT", "30 minutes or less"));
 	question.getAnswers().add(new Answer("LONG", "At least an hour"));
@@ -2388,7 +2395,7 @@ when
 	Answer( name == "TWO-PLAYERS" )
 	Answer( name == "SHORT" )
 then
-	Question question = new Question("SHORT", "Are you explorer or builder?", false, new ArrayList());
+	Question question = new Question("SHORT", "Are you explorer or builder?", new ArrayList());
 
 	question.getAnswers().add(new Answer("EXPLORATION", "Explorer"));
 	question.getAnswers().add(new Answer("BUILDING", "Builder"));
@@ -2410,8 +2417,8 @@ when
 	Answer( name == "SHORT" )
 	Answer( name == "EXPLORATION" )
 then
-    Question question = new Question("SOLUTION", "Lost Cities", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Lost Cities");
+    insert(solution);
 end
 
 
@@ -2428,8 +2435,8 @@ when
 	Answer( name == "SHORT" )
 	Answer( name == "BUILDING" )
 then
-    Question question = new Question("SOLUTION", "Agricola: All Creatures Big & Small", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Agricola: All Creatures Big & Small");
+    insert(solution);
 end
 
 
@@ -2445,7 +2452,7 @@ when
 	Answer( name == "TWO-PLAYERS" )
 	Answer( name == "LONG" )
 then
-	Question question = new Question("LONG", "Want to rewrite history?", false, new ArrayList());
+	Question question = new Question("LONG", "Want to rewrite history?", new ArrayList());
 
 	question.getAnswers().add(new Answer("REWRITE-HISTORY", "Yes - especially the Cold War"));
 	question.getAnswers().add(new Answer("MYSTERY", "No I prefer mysteries"));
@@ -2467,8 +2474,8 @@ when
 	Answer( name == "LONG" )
 	Answer( name == "REWRITE-HISTORY" )
 then
-    Question question = new Question("SOLUTION", "Twilight Struggle", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Twilight Struggle");
+    insert(solution);
 end
 
 
@@ -2485,8 +2492,8 @@ when
 	Answer( name == "LONG" )
 	Answer( name == "MYSTERY" )
 then
-    Question question = new Question("SOLUTION", "Mr. Jack", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Mr. Jack");
+    insert(solution);
 end
 
 
@@ -2501,7 +2508,7 @@ when
 	Answer( name == "COMPETITIVE" )
 	Answer( name == "MANY-PLAYERS" )
 then
-	Question question = new Question("MANY-PLAYERS", "Does it have to be new?", false, new ArrayList());
+	Question question = new Question("MANY-PLAYERS", "Does it have to be new?", new ArrayList());
 
 	question.getAnswers().add(new Answer("CLASSIC", "No, classics are classics for a reason"));
 	question.getAnswers().add(new Answer("NO-CLASSIC", "Yes, we've gotten better at designing"));
@@ -2522,7 +2529,7 @@ when
 	Answer( name == "MANY-PLAYERS" )
 	Answer( name == "CLASSIC" )
 then
-	Question question = new Question("CLASSIC", "Classic board or card games?", false, new ArrayList());
+	Question question = new Question("CLASSIC", "Classic board or card games?", new ArrayList());
 
 	question.getAnswers().add(new Answer("CARDS", "Shuffling is fun!"));
 	question.getAnswers().add(new Answer("BOARD", "Boards are a must!"));
@@ -2544,7 +2551,7 @@ when
 	Answer( name == "CLASSIC" )
 	Answer( name == "CARDS" )
 then
-	Question question = new Question("CARDS", "Want to build your own deck?", false, new ArrayList());
+	Question question = new Question("CARDS", "Want to build your own deck?", new ArrayList());
 
 	question.getAnswers().add(new Answer("DECKBUILDER", "Yes"));
 	question.getAnswers().add(new Answer("NO-DECKBUILDER", "I'd rather build a tableau"));
@@ -2567,8 +2574,8 @@ when
 	Answer( name == "CARDS" )
 	Answer( name == "DECKBUILDER" )
 then
-    Question question = new Question("SOLUTION", "Dominion", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Dominion");
+    insert(solution);
 end
 
 
@@ -2586,8 +2593,8 @@ when
 	Answer( name == "CARDS" )
 	Answer( name == "NO-DECKBUILDER" )
 then
-    Question question = new Question("SOLUTION", "St. Petersburg", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("St. Petersburg");
+    insert(solution);
 end
 
 
@@ -2604,7 +2611,7 @@ when
 	Answer( name == "CLASSIC" )
 	Answer( name == "BOARD" )
 then
-	Question question = new Question("BOARD", "Developing on a small or grand scale?", false, new ArrayList());
+	Question question = new Question("BOARD", "Developing on a small or grand scale?", new ArrayList());
 
 	question.getAnswers().add(new Answer("GRAND-SCALE", "Build me a nation!"));
 	question.getAnswers().add(new Answer("SMALL-SCALE", "I just want my bit of land"));
@@ -2627,8 +2634,8 @@ when
 	Answer( name == "BOARD" )
 	Answer( name == "GRAND-SCALE" )
 then
-    Question question = new Question("SOLUTION", "Puerto Rico", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Puerto Rico");
+    insert(solution);
 end
 
 
@@ -2646,8 +2653,8 @@ when
 	Answer( name == "BOARD" )
 	Answer( name == "SMALL-SCALE" )
 then
-    Question question = new Question("SOLUTION", "Agricola", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Agricola");
+    insert(solution);
 end
 
 
@@ -2663,7 +2670,7 @@ when
 	Answer( name == "MANY-PLAYERS" )
 	Answer( name == "NO-CLASSIC" )
 then
-	Question question = new Question("NO-CLASSIC", "Maybe a new twist on worker placement?", false, new ArrayList());
+	Question question = new Question("NO-CLASSIC", "Maybe a new twist on worker placement?", new ArrayList());
 
 	question.getAnswers().add(new Answer("WORKER-PLACEMENT", "Yes"));
 	question.getAnswers().add(new Answer("NO-WORKER-PLACEMENT", "No"));
@@ -2685,8 +2692,8 @@ when
 	Answer( name == "NO-CLASSIC" )
 	Answer( name == "WORKER-PLACEMENT" )
 then
-    Question question = new Question("SOLUTION", "Tzolk'in: The Mayan Calender", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Tzolk'in: The Mayan Calender");
+    insert(solution);
 end
 
 
@@ -2703,7 +2710,7 @@ when
 	Answer( name == "NO-CLASSIC" )
 	Answer( name == "NO-WORKER-PLACEMENT" )
 then
-	Question question = new Question("NO-WORKER-PLACEMENT", "Building an empire or working magic?", false, new ArrayList());
+	Question question = new Question("NO-WORKER-PLACEMENT", "Building an empire or working magic?", new ArrayList());
 
 	question.getAnswers().add(new Answer("MAGIC", "Magic!"));
 	question.getAnswers().add(new Answer("EMPIRE", "Empire!"));
@@ -2726,8 +2733,8 @@ when
 	Answer( name == "NO-WORKER-PLACEMENT" )
 	Answer( name == "MAGIC" )
 then
-    Question question = new Question("SOLUTION", "Seasons", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Seasons");
+    insert(solution);
 end
 
 
@@ -2745,8 +2752,8 @@ when
 	Answer( name == "NO-WORKER-PLACEMENT" )
 	Answer( name == "EMPIRE" )
 then
-    Question question = new Question("SOLUTION", "Kingdom Builder", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Kingdom Builder");
+    insert(solution);
 end
 
 
@@ -2760,7 +2767,7 @@ when
 	Answer( name == "NO-CIVILIZATION-BUILDING" )
 	Answer( name == "COOPERATIVE" )
 then
-	Question question = new Question("COOPERATIVE", "How hard do you want to make it?", false, new ArrayList());
+	Question question = new Question("COOPERATIVE", "How hard do you want to make it?", new ArrayList());
 
 	question.getAnswers().add(new Answer("SIMPLE", "Easy"));
 	question.getAnswers().add(new Answer("MEDIUM-DIFFICULTY", "Medium"));
@@ -2782,8 +2789,8 @@ when
 	Answer( name == "COOPERATIVE" )
 	Answer( name == "SIMPLE" )
 then
-    Question question = new Question("SOLUTION", "Forbidden Island", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Forbidden Island");
+    insert(solution);
 end
 
 
@@ -2798,8 +2805,8 @@ when
 	Answer( name == "COOPERATIVE" )
 	Answer( name == "MEDIUM-DIFFICULTY" )
 then
-    Question question = new Question("SOLUTION", "Flash Point: Fire Rescue", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Flash Point: Fire Rescue");
+    insert(solution);
 end
 
 
@@ -2814,8 +2821,8 @@ when
 	Answer( name == "COOPERATIVE" )
 	Answer( name == "HARD" )
 then
-    Question question = new Question("SOLUTION", "Pandemic", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Pandemic");
+    insert(solution);
 end
 
 
@@ -2830,8 +2837,8 @@ when
 	Answer( name == "COOPERATIVE" )
 	Answer( name == "VERY-HARD" )
 then
-    Question question = new Question("SOLUTION", "Ghost Stories", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Ghost Stories");
+    insert(solution);
 end
 
 
@@ -2843,7 +2850,7 @@ when
 	Answer( name == "MECHANICS" )
 	Answer( name == "ROUTE-OR-NETWORK-BUILDING" )
 then
-	Question question = new Question("ROUTE-OR-NETWORK-BUILDING", "What level of complexity can your group handle?", false, new ArrayList());
+	Question question = new Question("ROUTE-OR-NETWORK-BUILDING", "What level of complexity can your group handle?", new ArrayList());
 
 	question.getAnswers().add(new Answer("SIMPLE", "Low"));
 	question.getAnswers().add(new Answer("MEDIUM-DIFFICULTY", "Medium"));
@@ -2862,7 +2869,7 @@ when
 	Answer( name == "ROUTE-OR-NETWORK-BUILDING" )
 	Answer( name == "SIMPLE" )
 then
-	Question question = new Question("SIMPLE", "Have you played Ticket to Ride?", false, new ArrayList());
+	Question question = new Question("SIMPLE", "Have you played Ticket to Ride?", new ArrayList());
 
 	question.getAnswers().add(new Answer("NO-KNOW-TICK-TO-RIDE", "No yet"));
 	question.getAnswers().add(new Answer("KNOW-TICK-TO-RIDE", "Yes. What else is out there?"));
@@ -2881,8 +2888,8 @@ when
 	Answer( name == "SIMPLE" )
 	Answer( name == "NO-KNOW-TICK-TO-RIDE" )
 then
-    Question question = new Question("SOLUTION", "Ticket to Ride", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Ticket to Ride");
+    insert(solution);
 end
 
 
@@ -2896,8 +2903,8 @@ when
 	Answer( name == "SIMPLE" )
 	Answer( name == "KNOW-TICK-TO-RIDE" )
 then
-    Question question = new Question("SOLUTION", "Chicago Express", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Chicago Express");
+    insert(solution);
 end
 
 
@@ -2910,7 +2917,7 @@ when
 	Answer( name == "ROUTE-OR-NETWORK-BUILDING" )
 	Answer( name == "MEDIUM-DIFFICULTY" )
 then
-	Question question = new Question("MEDIUM-DIFFICULTY", "Want to be able to customize difficulty?", false, new ArrayList());
+	Question question = new Question("MEDIUM-DIFFICULTY", "Want to be able to customize difficulty?", new ArrayList());
 
 	question.getAnswers().add(new Answer("CUSTOMIZE-DIFFICULTY", "Yes"));
 	question.getAnswers().add(new Answer("NO-CUSTOMIZE-DIFFICULTY", "No"));
@@ -2929,8 +2936,8 @@ when
 	Answer( name == "MEDIUM-DIFFICULTY" )
 	Answer( name == "CUSTOMIZE-DIFFICULTY" )
 then
-    Question question = new Question("SOLUTION", "Steam: Rails to Riches", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Steam: Rails to Riches");
+    insert(solution);
 end
 
 
@@ -2944,8 +2951,8 @@ when
 	Answer( name == "MEDIUM-DIFFICULTY" )
 	Answer( name == "NO-CUSTOMIZE-DIFFICULTY" )
 then
-    Question question = new Question("SOLUTION", "Thurn & Taxis", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Thurn & Taxis");
+    insert(solution);
 end
 
 
@@ -2958,7 +2965,7 @@ when
 	Answer( name == "ROUTE-OR-NETWORK-BUILDING" )
 	Answer( name == "HARD" )
 then
-	Question question = new Question("HARD", "Trains or infrastructure?", false, new ArrayList());
+	Question question = new Question("HARD", "Trains or infrastructure?", new ArrayList());
 
 	question.getAnswers().add(new Answer("INFRASTRUCTURE", "Infrastructure"));
 	question.getAnswers().add(new Answer("TRAINS", "Trains"));
@@ -2977,8 +2984,8 @@ when
 	Answer( name == "HARD" )
 	Answer( name == "INFRASTRUCTURE" )
 then
-    Question question = new Question("SOLUTION", "Power Grid", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Power Grid");
+    insert(solution);
 end
 
 
@@ -2992,7 +2999,7 @@ when
 	Answer( name == "HARD" )
 	Answer( name == "TRAINS" )
 then
-	Question question = new Question("TRAINS", "Want to play the stock market too?", false, new ArrayList());
+	Question question = new Question("TRAINS", "Want to play the stock market too?", new ArrayList());
 
 	question.getAnswers().add(new Answer("STOCK-MARKET", "Yes"));
 	question.getAnswers().add(new Answer("NO-STOCK-MARKET", "No"));
@@ -3012,8 +3019,8 @@ when
 	Answer( name == "TRAINS" )
 	Answer( name == "STOCK-MARKET" )
 then
-    Question question = new Question("SOLUTION", "18XX Series", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("18XX Series");
+    insert(solution);
 end
 
 
@@ -3028,8 +3035,8 @@ when
 	Answer( name == "TRAINS" )
 	Answer( name == "NO-STOCK-MARKET" )
 then
-    Question question = new Question("SOLUTION", "Crayon Rails Games", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Crayon Rails Games");
+    insert(solution);
 end
 
 
@@ -3040,7 +3047,7 @@ when
 	Answer( name == "NO-THEME" )
 	Answer( name == "NON-GAMERS" )
 then
-	Question question = new Question("NON-GAMERS", "Are they kids?", false, new ArrayList());
+	Question question = new Question("NON-GAMERS", "Are they kids?", new ArrayList());
 
 	question.getAnswers().add(new Answer("KIDS", "Yes"));
 	question.getAnswers().add(new Answer("NO-KIDS", "No"));
@@ -3057,7 +3064,7 @@ when
 	Answer( name == "NON-GAMERS" )
 	Answer( name == "KIDS" )
 then
-	Question question = new Question("KIDS", "Do they like animals?", false, new ArrayList());
+	Question question = new Question("KIDS", "Do they like animals?", new ArrayList());
 
 	question.getAnswers().add(new Answer("ANIMALS", "Yes"));
 	question.getAnswers().add(new Answer("NO-ANIMALS", "No"));
@@ -3075,7 +3082,7 @@ when
 	Answer( name == "KIDS" )
 	Answer( name == "ANIMALS" )
 then
-	Question question = new Question("ANIMALS", "How's their attention span?", false, new ArrayList());
+	Question question = new Question("ANIMALS", "How's their attention span?", new ArrayList());
 
 	question.getAnswers().add(new Answer("LONG", "Pretty long"));
 	question.getAnswers().add(new Answer("SHORT", "Pretty short"));
@@ -3094,8 +3101,8 @@ when
 	Answer( name == "ANIMALS" )
 	Answer( name == "LONG" )
 then
-    Question question = new Question("SOLUTION", "Zooloretto", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Zooloretto");
+    insert(solution);
 end
 
 
@@ -3109,8 +3116,8 @@ when
 	Answer( name == "ANIMALS" )
 	Answer( name == "SHORT" )
 then
-    Question question = new Question("SOLUTION", "Hey! That's My Fish", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Hey! That's My Fish");
+    insert(solution);
 end
 
 
@@ -3123,7 +3130,7 @@ when
 	Answer( name == "KIDS" )
 	Answer( name == "NO-ANIMALS" )
 then
-	Question question = new Question("NO-ANIMALS", "How about something more abstract?", false, new ArrayList());
+	Question question = new Question("NO-ANIMALS", "How about something more abstract?", new ArrayList());
 
 	question.getAnswers().add(new Answer("ABSTRACT", "Sure"));
 	question.getAnswers().add(new Answer("NO-ABSTRACT", "No thanks"));
@@ -3142,7 +3149,7 @@ when
 	Answer( name == "NO-ANIMALS" )
 	Answer( name == "ABSTRACT" )
 then
-	Question question = new Question("ABSTRACT", "Anybody scared of insects?", false, new ArrayList());
+	Question question = new Question("ABSTRACT", "Anybody scared of insects?", new ArrayList());
 
 	question.getAnswers().add(new Answer("NO-INSECTS", "Maybe a little..."));
 	question.getAnswers().add(new Answer("INSECTS", "Nope!"));
@@ -3162,8 +3169,8 @@ when
 	Answer( name == "ABSTRACT" )
 	Answer( name == "NO-INSECTS" )
 then
-    Question question = new Question("SOLUTION", "Ingenious", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Ingenious");
+    insert(solution);
 end
 
 
@@ -3178,8 +3185,8 @@ when
 	Answer( name == "ABSTRACT" )
 	Answer( name == "INSECTS" )
 then
-    Question question = new Question("SOLUTION", "Hive", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Hive");
+    insert(solution);
 end
 
 
@@ -3193,8 +3200,8 @@ when
 	Answer( name == "NO-ANIMALS" )
 	Answer( name == "NO-ABSTRACT" )
 then
-    Question question = new Question("SOLUTION", "River dragons", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("River dragons");
+    insert(solution);
 end
 
 
@@ -3206,7 +3213,7 @@ when
 	Answer( name == "NON-GAMERS" )
 	Answer( name == "NO-KIDS" )
 then
-	Question question = new Question("NO-KIDS", "Do they hold grudges?", false, new ArrayList());
+	Question question = new Question("NO-KIDS", "Do they hold grudges?", new ArrayList());
 
 	question.getAnswers().add(new Answer("NO-PLAYERS-HOLD-GRUDGES", "No"));
 	question.getAnswers().add(new Answer("PLAYERS-HOLD-GRUDGES", "Yes"));
@@ -3224,8 +3231,8 @@ when
 	Answer( name == "NO-KIDS" )
 	Answer( name == "NO-PLAYERS-HOLD-GRUDGES" )
 then
-    Question question = new Question("SOLUTION", "Survive: Escape from Atlantis", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Survive: Escape from Atlantis");
+    insert(solution);
 end
 
 
@@ -3238,7 +3245,7 @@ when
 	Answer( name == "NO-KIDS" )
 	Answer( name == "PLAYERS-HOLD-GRUDGES" )
 then
-	Question question = new Question("PLAYERS-HOLD-GRUDGES", "Do they like trains", false, new ArrayList());
+	Question question = new Question("PLAYERS-HOLD-GRUDGES", "Do they like trains", new ArrayList());
 
 	question.getAnswers().add(new Answer("NO-TRAINS", "No"));
 	question.getAnswers().add(new Answer("TRAINS", "Yes"));
@@ -3257,7 +3264,7 @@ when
 	Answer( name == "PLAYERS-HOLD-GRUDGES" )
 	Answer( name == "NO-TRAINS" )
 then
-	Question question = new Question("NO-TRAINS", "How about rolling lots of dice?", false, new ArrayList());
+	Question question = new Question("NO-TRAINS", "How about rolling lots of dice?", new ArrayList());
 
 	question.getAnswers().add(new Answer("DICE", "Luck, be a lady!"));
 	question.getAnswers().add(new Answer("NO-DICE", "Pure strategy, please"));
@@ -3277,7 +3284,7 @@ when
 	Answer( name == "NO-TRAINS" )
 	Answer( name == "DICE" )
 then
-	Question question = new Question("DICE", "And negotiations?", false, new ArrayList());
+	Question question = new Question("DICE", "And negotiations?", new ArrayList());
 
 	question.getAnswers().add(new Answer("NEGOTIATE", "I love negotiating and trading"));
 	question.getAnswers().add(new Answer("NO-NEGOTIATE", "No, I'd rather do my own thing"));
@@ -3298,8 +3305,8 @@ when
 	Answer( name == "DICE" )
 	Answer( name == "NEGOTIATE" )
 then
-    Question question = new Question("SOLUTION", "Settlers of Catan", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Settlers of Catan");
+    insert(solution);
 end
 
 
@@ -3315,8 +3322,8 @@ when
 	Answer( name == "DICE" )
 	Answer( name == "NO-NEGOTIATE" )
 then
-    Question question = new Question("SOLUTION", "Stone Age", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Stone Age");
+    insert(solution);
 end
 
 
@@ -3331,8 +3338,8 @@ when
 	Answer( name == "NO-TRAINS" )
 	Answer( name == "NO-DICE" )
 then
-    Question question = new Question("SOLUTION", "Carcassonne", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Carcassonne");
+    insert(solution);
 end
 
 
@@ -3346,8 +3353,8 @@ when
 	Answer( name == "PLAYERS-HOLD-GRUDGES" )
 	Answer( name == "TRAINS" )
 then
-    Question question = new Question("SOLUTION", "Ticket to Ride", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Ticket to Ride");
+    insert(solution);
 end
 
 
@@ -3356,7 +3363,7 @@ when
 	Answer( name == "BUY-GAME" )
 	Answer( name == "WARGAME" )
 then
-	Question question = new Question("WARGAME", "For how many players?", false, new ArrayList());
+	Question question = new Question("WARGAME", "For how many players?", new ArrayList());
 
 	question.getAnswers().add(new Answer("MANY-PLAYERS", "2 or more"));
 	question.getAnswers().add(new Answer("ONE-PLAYER", "Just me"));
@@ -3371,7 +3378,7 @@ when
 	Answer( name == "WARGAME" )
 	Answer( name == "MANY-PLAYERS" )
 then
-	Question question = new Question("MANY-PLAYERS", "Do you have any wargaming experience?", false, new ArrayList());
+	Question question = new Question("MANY-PLAYERS", "Do you have any wargaming experience?", new ArrayList());
 
 	question.getAnswers().add(new Answer("NEW-WARGAMER", "It's new to me"));
 	question.getAnswers().add(new Answer("NO-NEW-WARGAMER", "Yes"));
@@ -3387,7 +3394,7 @@ when
 	Answer( name == "MANY-PLAYERS" )
 	Answer( name == "NEW-WARGAMER" )
 then
-	Question question = new Question("NEW-WARGAMER", "Are you a fan of Risk?", false, new ArrayList());
+	Question question = new Question("NEW-WARGAMER", "Are you a fan of Risk?", new ArrayList());
 
 	question.getAnswers().add(new Answer("RISK", "Yes"));
 	question.getAnswers().add(new Answer("NO-RISK", "No"));
@@ -3404,8 +3411,8 @@ when
 	Answer( name == "NEW-WARGAMER" )
 	Answer( name == "RISK" )
 then
-    Question question = new Question("SOLUTION", "Risk: Legacy", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Risk: Legacy");
+    insert(solution);
 end
 
 
@@ -3417,7 +3424,7 @@ when
 	Answer( name == "NEW-WARGAMER" )
 	Answer( name == "NO-RISK" )
 then
-	Question question = new Question("NO-RISK", "World history, or high fantasy?", false, new ArrayList());
+	Question question = new Question("NO-RISK", "World history, or high fantasy?", new ArrayList());
 
 	question.getAnswers().add(new Answer("HISTORY", "History"));
 	question.getAnswers().add(new Answer("FANTASY", "Fantasy"));
@@ -3435,8 +3442,8 @@ when
 	Answer( name == "NO-RISK" )
 	Answer( name == "HISTORY" )
 then
-    Question question = new Question("SOLUTION", "Memoir '44", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Memoir '44");
+    insert(solution);
 end
 
 
@@ -3449,8 +3456,8 @@ when
 	Answer( name == "NO-RISK" )
 	Answer( name == "FANTASY" )
 then
-    Question question = new Question("SOLUTION", "Battles of Westeros", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Battles of Westeros");
+    insert(solution);
 end
 
 
@@ -3461,7 +3468,7 @@ when
 	Answer( name == "MANY-PLAYERS" )
 	Answer( name == "NO-NEW-WARGAMER" )
 then
-	Question question = new Question("NO-NEW-WARGAMER", "Want to command Roman legions?", false, new ArrayList());
+	Question question = new Question("NO-NEW-WARGAMER", "Want to command Roman legions?", new ArrayList());
 
 	question.getAnswers().add(new Answer("ROMAN-LEGIONS", "Yes"));
 	question.getAnswers().add(new Answer("NO-ROMAN-LEGIONS", "No"));
@@ -3478,8 +3485,8 @@ when
 	Answer( name == "NO-NEW-WARGAMER" )
 	Answer( name == "ROMAN-LEGIONS" )
 then
-    Question question = new Question("SOLUTION", "Commands & Colors: Ancients", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Commands & Colors: Ancients");
+    insert(solution);
 end
 
 
@@ -3491,7 +3498,7 @@ when
 	Answer( name == "NO-NEW-WARGAMER" )
 	Answer( name == "NO-ROMAN-LEGIONS" )
 then
-	Question question = new Question("NO-ROMAN-LEGIONS", "Lead 19th Century battle lines?", false, new ArrayList());
+	Question question = new Question("NO-ROMAN-LEGIONS", "Lead 19th Century battle lines?", new ArrayList());
 
 	question.getAnswers().add(new Answer("NO-XIX-CENTURY-BATTLE", "No"));
 	question.getAnswers().add(new Answer("XIX-CENTURY-BATTLE", "Yes"));
@@ -3509,7 +3516,7 @@ when
 	Answer( name == "NO-ROMAN-LEGIONS" )
 	Answer( name == "NO-XIX-CENTURY-BATTLE" )
 then
-	Question question = new Question("NO-XIX-CENTURY-BATTLE", "How about World War II ?", false, new ArrayList());
+	Question question = new Question("NO-XIX-CENTURY-BATTLE", "How about World War II ?", new ArrayList());
 
 	question.getAnswers().add(new Answer("WW2", "Yes"));
 	question.getAnswers().add(new Answer("NO-WW2", "No"));
@@ -3528,7 +3535,7 @@ when
 	Answer( name == "NO-XIX-CENTURY-BATTLE" )
 	Answer( name == "WW2" )
 then
-	Question question = new Question("WW2", "Card- or dice- driven combat?", false, new ArrayList());
+	Question question = new Question("WW2", "Card- or dice- driven combat?", new ArrayList());
 
 	question.getAnswers().add(new Answer("DICE", "*roll roll roll*"));
 	question.getAnswers().add(new Answer("CARDS", "*shuffle shuffle*"));
@@ -3548,8 +3555,8 @@ when
 	Answer( name == "WW2" )
 	Answer( name == "DICE" )
 then
-    Question question = new Question("SOLUTION", "Tide of Iron", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Tide of Iron");
+    insert(solution);
 end
 
 
@@ -3564,8 +3571,8 @@ when
 	Answer( name == "WW2" )
 	Answer( name == "CARDS" )
 then
-    Question question = new Question("SOLUTION", "Combat Commander Series", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Combat Commander Series");
+    insert(solution);
 end
 
 
@@ -3579,7 +3586,7 @@ when
 	Answer( name == "NO-XIX-CENTURY-BATTLE" )
 	Answer( name == "NO-WW2" )
 then
-	Question question = new Question("NO-WW2", "Modern Warfare, then?", false, new ArrayList());
+	Question question = new Question("NO-WW2", "Modern Warfare, then?", new ArrayList());
 
 	question.getAnswers().add(new Answer("MODERN-WARFARE", "Yes, I like the immediacy"));
 	question.getAnswers().add(new Answer("NO-MODERN-WARFARE", "No, I'm tired of real wars"));
@@ -3599,8 +3606,8 @@ when
 	Answer( name == "NO-WW2" )
 	Answer( name == "MODERN-WARFARE" )
 then
-    Question question = new Question("SOLUTION", "Labyrinth: The War on Terror", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Labyrinth: The War on Terror");
+    insert(solution);
 end
 
 
@@ -3615,7 +3622,7 @@ when
 	Answer( name == "NO-WW2" )
 	Answer( name == "NO-MODERN-WARFARE" )
 then
-	Question question = new Question("NO-MODERN-WARFARE", "Science Fiction or alternate history?", false, new ArrayList());
+	Question question = new Question("NO-MODERN-WARFARE", "Science Fiction or alternate history?", new ArrayList());
 
 	question.getAnswers().add(new Answer("ALT-HISTORY", "Alt-History"));
 	question.getAnswers().add(new Answer("SCIENCE-FICTION", "Science Fiction"));
@@ -3636,7 +3643,7 @@ when
 	Answer( name == "NO-MODERN-WARFARE" )
 	Answer( name == "ALT-HISTORY" )
 then
-	Question question = new Question("ALT-HISTORY", "Tactical miniatures, or large-scale strategy?", false, new ArrayList());
+	Question question = new Question("ALT-HISTORY", "Tactical miniatures, or large-scale strategy?", new ArrayList());
 
 	question.getAnswers().add(new Answer("STRATEGY", "Strategic"));
 	question.getAnswers().add(new Answer("TACTICS", "Tactical"));
@@ -3658,8 +3665,8 @@ when
 	Answer( name == "ALT-HISTORY" )
 	Answer( name == "STRATEGY" )
 then
-    Question question = new Question("SOLUTION", "Fortress America", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Fortress America");
+    insert(solution);
 end
 
 
@@ -3676,8 +3683,8 @@ when
 	Answer( name == "ALT-HISTORY" )
 	Answer( name == "TACTICS" )
 then
-    Question question = new Question("SOLUTION", "Dust Tactics", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Dust Tactics");
+    insert(solution);
 end
 
 
@@ -3693,7 +3700,7 @@ when
 	Answer( name == "NO-MODERN-WARFARE" )
 	Answer( name == "SCIENCE-FICTION" )
 then
-	Question question = new Question("SCIENCE-FICTION", "Space ships or giant robots?", false, new ArrayList());
+	Question question = new Question("SCIENCE-FICTION", "Space ships or giant robots?", new ArrayList());
 
 	question.getAnswers().add(new Answer("SPACE-SHIPS", "Ships!"));
 	question.getAnswers().add(new Answer("ROBOTS", "Mechs!"));
@@ -3715,8 +3722,8 @@ when
 	Answer( name == "SCIENCE-FICTION" )
 	Answer( name == "SPACE-SHIPS" )
 then
-    Question question = new Question("SOLUTION", "Battleship Galaxies", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Battleship Galaxies");
+    insert(solution);
 end
 
 
@@ -3733,8 +3740,8 @@ when
 	Answer( name == "SCIENCE-FICTION" )
 	Answer( name == "ROBOTS" )
 then
-    Question question = new Question("SOLUTION", "Battletech", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Battletech");
+    insert(solution);
 end
 
 
@@ -3747,8 +3754,8 @@ when
 	Answer( name == "NO-ROMAN-LEGIONS" )
 	Answer( name == "XIX-CENTURY-BATTLE" )
 then
-    Question question = new Question("SOLUTION", "1812: The Invasion of Canada", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("1812: The Invasion of Canada");
+    insert(solution);
 end
 
 
@@ -3758,7 +3765,7 @@ when
 	Answer( name == "WARGAME" )
 	Answer( name == "ONE-PLAYER" )
 then
-	Question question = new Question("ONE-PLAYER", "None", false, new ArrayList());
+	Question question = new Question("ONE-PLAYER", "None", new ArrayList());
 
 	question.getAnswers().add(new Answer("HISTORIC", "Historic Battles"));
 	question.getAnswers().add(new Answer("AIR-SUPPORT", "Modern Air Support"));
@@ -3775,8 +3782,8 @@ when
 	Answer( name == "ONE-PLAYER" )
 	Answer( name == "HISTORIC" )
 then
-    Question question = new Question("SOLUTION", "Field Commander Series ", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Field Commander Series ");
+    insert(solution);
 end
 
 
@@ -3787,8 +3794,8 @@ when
 	Answer( name == "ONE-PLAYER" )
 	Answer( name == "AIR-SUPPORT" )
 then
-    Question question = new Question("SOLUTION", "Thunderbolt: Apache Leader ", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Thunderbolt: Apache Leader ");
+    insert(solution);
 end
 
 
@@ -3799,7 +3806,7 @@ when
 	Answer( name == "ONE-PLAYER" )
 	Answer( name == "SCIENCE-FICTION" )
 then
-    Question question = new Question("SOLUTION", "Space Infantry", false, new ArrayList());
-    insert(question);
+    Solution solution = new Solution("Space Infantry");
+    insert(solution);
 end
 
