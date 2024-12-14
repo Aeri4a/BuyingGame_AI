@@ -17,14 +17,15 @@ public class LayoutUI extends JFrame {
 	private KieContainer kContainer;
 	private KieSession kSession;
 	
-	
 	// Main UI components
 	private CardLayout cardLayout;
 	private JPanel cardPanel;
 	private JPanel startPanel = new JPanel();
 	private JPanel contentPanel = new JPanel();
+	private JPanel endPanel = new JPanel();
 	
 	// Drools interactive
+	private JLabel solutionText = new JLabel("");
 	private JPanel answerPanel = new JPanel();
 	private JLabel currentQuestion = new JLabel();
 	private ArrayList<Answer> currentAnswers;
@@ -35,7 +36,7 @@ public class LayoutUI extends JFrame {
 		initialize();
 	}
 	
-	public void changeState(
+	public void showQuestion(
 			Question question
 	) {
 		this.currentQuestion.setText(question.getQuestion());
@@ -57,6 +58,11 @@ public class LayoutUI extends JFrame {
 		}
 	}
 	
+	public void showSolution(String solution) {
+		this.solutionText.setText(solution);
+		this.cardLayout.next(this.cardPanel);
+	}
+	
 	private void initialize() {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(1280, 720);
@@ -67,14 +73,15 @@ public class LayoutUI extends JFrame {
 		
 		this.contentPanel.setBackground(getForeground());
 		this.contentPanel.setLayout(new BorderLayout());
+		this.endPanel.add(this.solutionText);
 		
 		this.cardLayout = new CardLayout();
 		this.cardPanel = new JPanel(cardLayout);
 		this.cardPanel.add(startPanel, "StartPanel");
 		this.cardPanel.add(contentPanel, "ContentPanel");
+		this.cardPanel.add(endPanel, "EndPanel");
 		
 		this.add(cardPanel, BorderLayout.CENTER);
-		
 		
 		this.displayStartView();
 		this.setVisible(true);
