@@ -2,6 +2,8 @@ package put.ai;
 
 import java.util.ArrayList;
 
+global LayoutUI gui;
+
 declare Answer
 	name : String
 	content : String
@@ -26,15 +28,13 @@ end
 rule "show-question"
 when
 	q: Question( )
-	gui: LayoutUI( )
 then
-    gui.showQuestion(q);
+    gui.showQuestion(q.getContent(), q.getAnswers());
 end
 
 rule "show-solution"
 when
     s: Solution( )
-    gui: LayoutUI( )
 then
     gui.showSolution(s.getContent());
 end

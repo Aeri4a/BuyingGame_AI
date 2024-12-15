@@ -32,6 +32,17 @@ public class LayoutUI extends JFrame {
 	private JLabel currentQuestion = new JLabel();
 	private ArrayList<Answer> currentAnswers;
 	private ArrayList<JRadioButton> currentOptions;
+	
+	// TEST
+//	private String currentAnswerName;
+//	private String currentAnswerContent;
+//	public String getCurrentAnswerName() {
+//		return this.currentAnswerName;
+//	}
+//	public String getCurrentAnswerContent() {
+//		return this.currentAnswerContent;
+//	}
+	// END TEST
 
 	public LayoutUI() {
 		super("BuyingGame");
@@ -39,10 +50,11 @@ public class LayoutUI extends JFrame {
 	}
 	
 	public void showQuestion(
-			Question question
+			String questionContent,
+			ArrayList<Answer> questionAnswers
 	) {
-		this.currentQuestion.setText(question.getContent());
-		this.currentAnswers = question.getAnswers();
+		this.currentQuestion.setText(questionContent);
+		this.currentAnswers = questionAnswers;
 		this.currentOptions = new ArrayList<JRadioButton>();
 		ButtonGroup buttonGroup = new ButtonGroup();
 		
@@ -52,7 +64,7 @@ public class LayoutUI extends JFrame {
 		this.contentPanel.add(this.answerPanel);
 		this.contentPanel.revalidate();
 		
-		for (Answer answer : question.getAnswers()) {
+		for (Answer answer : questionAnswers) {
 			JRadioButton button = new JRadioButton(answer.getContent());
 			buttonGroup.add(button);
 			currentOptions.add(button);
@@ -113,7 +125,8 @@ public class LayoutUI extends JFrame {
 	    	    this.kContainer = ks.getKieClasspathContainer();
 	        	this.kSession = kContainer.newKieSession("ksession-rules");
 
-	        	kSession.insert(this);
+	        	// kSession.insert(this);
+	        	kSession.setGlobal("gui", this);
 	            kSession.fireAllRules();
 	            displayContentView();
 	        } catch (Throwable t) {
@@ -149,6 +162,9 @@ public class LayoutUI extends JFrame {
 					.orElse(null);
 			
 			kSession.insert(answer);
+//			System.out.println("UPDATING!"); // TEST
+//			this.currentAnswerContent = answer.getContent(); // TEST
+//			this.currentAnswerName = answer.getName(); // TEST
             kSession.fireAllRules();
 		});
 		buttonPanel.add(submitButton);
