@@ -53,6 +53,15 @@ public class LayoutUI extends JFrame {
 		this.answerPanel.setLayout(new BoxLayout(answerPanel, BoxLayout.Y_AXIS));
 		this.contentPanel.add(this.answerPanel);
 		this.contentPanel.revalidate();
+		this.answerPanel.revalidate();
+		
+		
+		this.solutionText.setFont(new Font(FONT_NAME, Font.BOLD, 20));
+		
+		// Centering
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		this.contentPanel.add(this.answerPanel, gbc);
 		
 		for (Answer answer : questionAnswers) {
 			JRadioButton button = new JRadioButton(answer.getContent());
@@ -81,22 +90,23 @@ public class LayoutUI extends JFrame {
 		this.startPanel.setLayout(new GridBagLayout());
 		
 //		this.contentPanel.setBackground(new Color(27,27,27));
-		this.contentPanel.setLayout(new BorderLayout());
+		this.contentPanel.setLayout(new GridBagLayout());
+//		this.contentPanel.setLayout(new BorderLayout());
 				
 		this.endPanel.setLayout(new GridBagLayout());
-		JLabel solutionTextHeader = new JLabel("Solution found!");
-		solutionTextHeader.setFont(new Font(FONT_NAME, Font.PLAIN, 40));
+		JLabel solutionTextHeader = new JLabel("Game found!");
+		solutionTextHeader.setFont(new Font(FONT_NAME, Font.PLAIN, 20));
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		this.endPanel.add(solutionTextHeader, gbc);
 		gbc.gridy = 1;
-		this.solutionText.setFont(new Font(FONT_NAME, Font.BOLD, 50));
+		this.solutionText.setFont(new Font(FONT_NAME, Font.BOLD, 20));
 		this.endPanel.add(this.solutionText, gbc);
 		
 		this.cardLayout = new CardLayout();
 		this.cardPanel = new JPanel(cardLayout);
 		this.cardPanel.add(startPanel, "StartPanel");
-		this.cardPanel.add(contentPanel, "ContentPanel");
+		this.cardPanel.add(contentPanel, "ContentPanel"); // THIS
 		this.cardPanel.add(endPanel, "EndPanel");
 		
 		this.add(cardPanel, BorderLayout.CENTER);
@@ -155,10 +165,18 @@ public class LayoutUI extends JFrame {
             kSession.fireAllRules();
 		});
 		buttonPanel.add(submitButton);
+		
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		this.contentPanel.add(questionPanel, gbc);
+		gbc.gridy = 1;
+		this.contentPanel.add(this.answerPanel, gbc);
+		gbc.gridy = 2;
+		this.contentPanel.add(buttonPanel, gbc);
 			
-		this.contentPanel.add(questionPanel, BorderLayout.NORTH);
-		this.contentPanel.add(this.answerPanel, BorderLayout.CENTER);
-		this.contentPanel.add(buttonPanel, BorderLayout.SOUTH);
+//		this.contentPanel.add(questionPanel, BorderLayout.NORTH);
+//		this.contentPanel.add(this.answerPanel, BorderLayout.CENTER);
+//		this.contentPanel.add(buttonPanel, BorderLayout.SOUTH);
 		
 		this.cardLayout.next(this.cardPanel);
 	}
