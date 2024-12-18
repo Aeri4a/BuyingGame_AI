@@ -31,7 +31,6 @@ public class LayoutUI extends JFrame {
 	private JPanel answerPanel = new JPanel();
 	private JLabel currentQuestion = new JLabel();
 	private ArrayList<Answer> currentAnswers;
-	private ArrayList<JRadioButton> currentOptions;
 
 	public LayoutUI() {
 		super("BuyingGame");
@@ -44,31 +43,35 @@ public class LayoutUI extends JFrame {
 	) {
 		this.currentQuestion.setText(questionContent);
 		this.currentAnswers = questionAnswers;
-		this.currentOptions = new ArrayList<JRadioButton>();
-		ButtonGroup buttonGroup = new ButtonGroup();
 		
 		// Update panel
 		this.contentPanel.remove(this.answerPanel);
 		this.answerPanel = new JPanel();
-		this.answerPanel.setLayout(new BoxLayout(answerPanel, BoxLayout.Y_AXIS));
-		this.contentPanel.add(this.answerPanel);
+		this.answerPanel.setLayout(new GridBagLayout());
 		this.contentPanel.revalidate();
 		this.answerPanel.revalidate();
+		this.contentPanel.add(this.answerPanel);
+	
 		
-		
-		this.solutionText.setFont(new Font(FONT_NAME, Font.BOLD, 20));
+//		this.solutionText.setFont(new Font(FONT_NAME, Font.BOLD, 20)); NO NEED
 		
 		// Centering
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		this.contentPanel.add(this.answerPanel, gbc);
 		
+		gbc.gridy = 1;
 		for (Answer answer : questionAnswers) {
-			JRadioButton button = new JRadioButton(answer.getContent());
+			JButton button = new JButton(answer.getContent());
+			button.setPreferredSize(new Dimension(400, 80));
 			button.setFont(new Font(FONT_NAME, Font.PLAIN, 18));
-			buttonGroup.add(button);
-			currentOptions.add(button);
-			answerPanel.add(button);
+			button.addActionListener(e -> {
+				kSession.insert(answer);
+	            kSession.fireAllRules();
+			});
+			
+			answerPanel.add(button, gbc);
+			gbc.gridy++;
 		}
 	}
 	
@@ -118,7 +121,7 @@ public class LayoutUI extends JFrame {
 	private void displayStartView() {
 		JButton startButton = new JButton();
 		startButton.setText("Rozpocznij");
-		startButton.setPreferredSize(new Dimension(400, 100));
+		startButton.setPreferredSize(new Dimension(200, 100));
 		startButton.addActionListener(e -> {
 			try {
 	            // load up the knowledge base
@@ -145,39 +148,35 @@ public class LayoutUI extends JFrame {
 		// Answers
 		this.answerPanel.setLayout(new BoxLayout(answerPanel, BoxLayout.Y_AXIS));
 				
-		// Buttons
-		JPanel buttonPanel = new JPanel();
-		JButton submitButton = new JButton("Submit");
-		submitButton.addActionListener(e -> {
-			JRadioButton selectedButton = currentOptions
-					.stream()
-					.filter(btn -> btn.isSelected())
-					.findAny()
-					.orElse(null);
-			
-			Answer answer = currentAnswers
-					.stream()
-					.filter(ans -> selectedButton.getText().equals(ans.getContent()))
-					.findAny()
-					.orElse(null);
-			
-			kSession.insert(answer);
-            kSession.fireAllRules();
-		});
-		buttonPanel.add(submitButton);
+		// Buttons -> OLD
+//		JPanel buttonPanel = new JPanel();
+//		JButton submitButton = new JButton("Submit");
+//		submitButton.addActionListener(e -> {
+//			JRadioButton selectedButton = currentOptions
+//					.stream()
+//					.filter(btn -> btn.isSelected())
+//					.findAny()
+//					.orElse(null);
+//			
+//			Answer answer = currentAnswers
+//					.stream()
+//					.filter(ans -> selectedButton.getText().equals(ans.getContent()))
+//					.findAny()
+//					.orElse(null);
+//			
+//			kSession.insert(answer);
+//            kSession.fireAllRules();
+//		});
+//		buttonPanel.add(submitButton);
 		
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		this.contentPanel.add(questionPanel, gbc);
 		gbc.gridy = 1;
 		this.contentPanel.add(this.answerPanel, gbc);
-		gbc.gridy = 2;
-		this.contentPanel.add(buttonPanel, gbc);
+//		gbc.gridy = 2;
+//		this.contentPanel.add(buttonPanel, gbc);
 			
-//		this.contentPanel.add(questionPanel, BorderLayout.NORTH);
-//		this.contentPanel.add(this.answerPanel, BorderLayout.CENTER);
-//		this.contentPanel.add(buttonPanel, BorderLayout.SOUTH);
-		
 		this.cardLayout.next(this.cardPanel);
 	}
 }
