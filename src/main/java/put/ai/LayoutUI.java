@@ -4,9 +4,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
+import javax.swing.plaf.basic.BasicButtonUI;
 
 import org.kie.api.KieServices;
 import org.kie.api.runtime.KieContainer;
@@ -37,6 +35,7 @@ public class LayoutUI extends JFrame {
 	private JPanel solutionPanel = new JPanel();
 	private GridBagConstraints gbc = new GridBagConstraints();
 	private Border buttonBorder = BorderFactory.createLineBorder(Color.BLACK);
+	private BasicButtonUI buttonUi;
 	
 	// Drools interactive
 	private JLabel solutionText = new JLabel("");
@@ -66,6 +65,7 @@ public class LayoutUI extends JFrame {
 			button.setBorder(buttonBorder);
 			button.setBackground(this.buttonColor);
 			button.setForeground(Color.WHITE);
+			button.setUI(buttonUi);
 			button.addActionListener(e -> {
 				kSession.insert(answer);
 	            kSession.fireAllRules();
@@ -87,6 +87,17 @@ public class LayoutUI extends JFrame {
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setLayout(new BorderLayout());
+		
+		this.buttonUi = new BasicButtonUI() {
+	        @Override
+	        public void paint(Graphics g, JComponent c) {
+	            JButton b = (JButton) c;
+	            if (b.getModel().isPressed())
+	                b.setBackground(new Color(65, 66, 60));
+	            
+	            super.paint(g, c);
+	        }
+	    };
 		
 		this.startPanel.setLayout(new GridBagLayout());
 		
@@ -131,15 +142,10 @@ public class LayoutUI extends JFrame {
 		startButton.setForeground(Color.WHITE);
 		startButton.setPreferredSize(new Dimension(400, 100));
 		startButton.setFont(new Font(FONT_NAME, Font.BOLD, 25));
-//		startButton.addFocusListener(new FocusAdapter() {
-//            @Override
-//            public void focusGained(FocusEvent e) {
-//            	e.getComponent().setBackground(Color.GREEN);
-//            }
-//        });
+		startButton.setUI(this.buttonUi);
+
 		startButton.addActionListener(e -> {
 			try {
-	            // load up the knowledge base
 		        this.ks = KieServices.Factory.get();
 	    	    this.kContainer = ks.getKieClasspathContainer();
 	        	this.kSession = kContainer.newKieSession("ksession-rules");
@@ -184,12 +190,11 @@ public class LayoutUI extends JFrame {
 			  } catch (IOException io) {
 				  
 			  }
-		    
 		  }
 
 		  public void paintComponent(Graphics g) {
 		    super.paintComponent(g);
 		    g.drawImage(backgroundImage, 0, 0, 1000, 500, this);
 		  }
-		}
+	}
 }
