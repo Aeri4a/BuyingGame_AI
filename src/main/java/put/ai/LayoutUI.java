@@ -3,6 +3,8 @@ package put.ai;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 
 public class LayoutUI extends JFrame {
 	private static final long serialVersionUID = 1L;
+	private static final int BORDER_WIDTH = 16;
 	private final String FONT_NAME = "Futura";
 	private final Color buttonColor = new Color(43, 44, 39);
 	
@@ -31,6 +34,7 @@ public class LayoutUI extends JFrame {
 	private JPanel startPanel = new JPanelWithBackground("./assets/bg.png");
 	private JPanel contentPanel = new JPanelWithBackground("./assets/bg.png");
 	private JPanel endPanel = new JPanelWithBackground("./assets/bg.png");
+	private JPanel solutionPanel = new JPanel();
 	private GridBagConstraints gbc = new GridBagConstraints();
 	private Border buttonBorder = BorderFactory.createLineBorder(Color.BLACK);
 	
@@ -87,16 +91,24 @@ public class LayoutUI extends JFrame {
 		this.startPanel.setLayout(new GridBagLayout());
 		
 		this.contentPanel.setLayout(new GridBagLayout());
-				
+		
 		this.endPanel.setLayout(new GridBagLayout());
+		this.solutionPanel.setLayout(new GridBagLayout());
+		this.solutionPanel.setBackground(this.buttonColor);
 		JLabel solutionTextHeader = new JLabel("Game found!");
+		solutionTextHeader.setBorder(new EmptyBorder(BORDER_WIDTH,BORDER_WIDTH,BORDER_WIDTH,BORDER_WIDTH));
 		solutionTextHeader.setFont(new Font(FONT_NAME, Font.PLAIN, 20));
+		solutionTextHeader.setForeground(Color.WHITE);
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		this.endPanel.add(solutionTextHeader, gbc);
+		this.solutionPanel.add(solutionTextHeader, gbc);
 		gbc.gridy = 1;
-		this.solutionText.setFont(new Font(FONT_NAME, Font.BOLD, 20));
-		this.endPanel.add(this.solutionText, gbc);
+		this.solutionText.setBorder(new EmptyBorder(BORDER_WIDTH,BORDER_WIDTH,BORDER_WIDTH,BORDER_WIDTH));
+		this.solutionText.setFont(new Font(FONT_NAME, Font.BOLD, 24));
+		this.solutionText.setForeground(Color.WHITE);
+		this.solutionPanel.add(this.solutionText, gbc);
+		gbc.gridy = 0;
+		this.endPanel.add(solutionPanel, gbc);
 		
 		this.cardLayout = new CardLayout();
 		this.cardPanel = new JPanel(cardLayout);
@@ -148,6 +160,7 @@ public class LayoutUI extends JFrame {
 		questionPanel.setBackground(new Color(0, 0, 0, 90));
 		this.currentQuestion.setFont(new Font(FONT_NAME, Font.BOLD, 25));
 		this.currentQuestion.setForeground(Color.WHITE);
+		this.currentQuestion.setBorder(new EmptyBorder(BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH));
 		questionPanel.add(this.currentQuestion);
 		
 		gbc.gridx = 0;
